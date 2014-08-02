@@ -1,0 +1,47 @@
+apply plugin: "java"
+apply plugin: "application"
+
+
+sourceCompatibility= 1.8
+
+mainClassName = "eu.lestard.nonogram.Launcher"
+jar.manifest.attributes("Main-Class" : mainClassName)
+
+
+
+
+repositories {
+    mavenCentral()
+    maven{
+        url "https://oss.sonatype.org/content/repositories/snapshots/"
+    }
+}
+
+allprojects {
+    gradle.projectsEvaluated {
+        tasks.withType(JavaCompile) {
+            options.compilerArgs << "-Xlint:deprecation"
+        }
+    }
+}
+
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.0'
+}
+
+dependencies {
+
+    compile 'ch.qos.logback:logback-classic:1.1.2'
+
+    compile 'de.saxsys:mvvmFX:0.3.0-SNAPSHOT'
+
+    compile 'eu.lestard:grid:0.1.0-SNAPSHOT'
+
+    // testing
+    testCompile "junit:junit:4.11"
+    testCompile "org.assertj:assertj-core:1.6.0"
+    testCompile "org.mockito:mockito-all:1.9.5"
+    testCompile "eu.lestard:assertj-javafx:0.1.1"
+
+}
