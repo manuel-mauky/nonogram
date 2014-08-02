@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+
+<AnchorPane fx:id="rootPane" prefHeight="200.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/8"
+          xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.lestard.nonogram.puzzle.PuzzleView">
+ <children>
+    <Pane fx:id="overviewPane" style="-fx-background-color: yellow;" />
+    <Pane fx:id="topNumberPane" style="-fx-background-color: blue;" />
+    <Pane fx:id="leftNumberPane" style="-fx-background-color: pink;" />
+    <Pane fx:id="centerPane" style="-fx-background-color: green;" />
+ </children>
+</AnchorPane>
