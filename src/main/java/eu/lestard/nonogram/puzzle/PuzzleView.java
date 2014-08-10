@@ -1,8 +1,9 @@
 package eu.lestard.nonogram.puzzle;
 
 import de.saxsys.jfx.mvvm.api.FxmlView;
-import eu.lestard.grid.GridModel;
+import de.saxsys.jfx.mvvm.api.InjectViewModel;
 import eu.lestard.grid.GridView;
+import eu.lestard.nonogram.core.Numbers;
 import eu.lestard.nonogram.core.State;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.value.ObservableDoubleValue;
@@ -12,11 +13,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 
 public class PuzzleView implements FxmlView<PuzzleViewModel> {
-
-    private static final int COLUMNS = 20;
-    private static final int ROWS = 20;
-
-
 
     @FXML
     private AnchorPane centerPane;
@@ -33,6 +29,9 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
     @FXML
     private AnchorPane rootPane;
 
+    @InjectViewModel
+    private PuzzleViewModel viewModel;
+
 
     public void initialize(){
         initLayout();
@@ -47,12 +46,8 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
     }
 
     private void initOverviewGrid() {
-        GridModel<State> overviewGridModel = new GridModel<>();
-        overviewGridModel.setNumberOfColumns(COLUMNS);
-        overviewGridModel.setNumberOfRows(ROWS);
-
         GridView<State> overviewGridView = new GridView<>();
-        overviewGridView.setGridModel(overviewGridModel);
+        overviewGridView.setGridModel(viewModel.getOverviewGridModel());
 
         overviewPane.getChildren().add(overviewGridView);
 
@@ -61,37 +56,24 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
 
 
     private void initLeftNumberGrid() {
-        GridModel<State> leftNumberGridModel = new GridModel<>();
-        leftNumberGridModel.setNumberOfColumns(COLUMNS/2);
-        leftNumberGridModel.setNumberOfRows(ROWS);
-
-        GridView<State> leftNumberGridView = new GridView<>();
-        leftNumberGridView.setGridModel(leftNumberGridModel);
+        GridView<Numbers> leftNumberGridView = new GridView<>();
+        leftNumberGridView.setGridModel(viewModel.getLeftNumberGridModel());
         leftNumberPane.getChildren().add(leftNumberGridView);
 
         initAnchor(leftNumberGridView);
     }
 
     private void initTopNumberGrid() {
-        GridModel<State> topNumberGridModel = new GridModel<>();
-        topNumberGridModel.setNumberOfColumns(COLUMNS);
-        topNumberGridModel.setNumberOfRows(ROWS/2);
-
-        GridView<State> topNumberGridView = new GridView<>();
-        topNumberGridView.setGridModel(topNumberGridModel);
+        GridView<Numbers> topNumberGridView = new GridView<>();
+        topNumberGridView.setGridModel(viewModel.getTopNumberGridModel());
         topNumberPane.getChildren().add(topNumberGridView);
 
         initAnchor(topNumberGridView);
     }
 
     private void initCenterGrid() {
-        GridModel<State> centerGridModel = new GridModel<>();
-
-        centerGridModel.setNumberOfColumns(COLUMNS);
-        centerGridModel.setNumberOfRows(ROWS);
-
         GridView<State> centerGridView = new GridView<>();
-        centerGridView.setGridModel(centerGridModel);
+        centerGridView.setGridModel(viewModel.getCenterGridModel());
 
         centerPane.getChildren().add(centerGridView);
         initAnchor(centerGridView);
@@ -112,7 +94,7 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
         double anchorMargin = 1;
 
         final DoubleBinding oneThirdsWidth = rootPane.widthProperty().subtract(anchorMargin*4).divide(3);
-        final DoubleBinding oneThirdsHeight = rootPane.heightProperty().subtract(anchorMargin*4).divide(3);
+        final DoubleBinding oneThirdsHeight = rootPane.heightProperty().subtract(anchorMargin * 4).divide(3);
 
         final DoubleBinding twoThirdsWidth = oneThirdsWidth.multiply(2);
         final DoubleBinding twoThirdsHeight = oneThirdsHeight.multiply(2);

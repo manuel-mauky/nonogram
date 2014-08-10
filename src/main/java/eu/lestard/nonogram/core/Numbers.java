@@ -2,6 +2,8 @@ package eu.lestard.nonogram.core;
 
 public enum Numbers {
 
+    EMPTY,
+
     ONE,
     TWO,
     THREE,
@@ -11,5 +13,6 @@ public enum Numbers {
     SEVEN,
     EIGHT,
     NINE
+
 
 }
