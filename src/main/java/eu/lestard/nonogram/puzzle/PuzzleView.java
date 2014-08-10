@@ -35,7 +35,6 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
 
 
     public void initialize(){
-
         initLayout();
 
         initCenterGrid();
@@ -43,6 +42,21 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
         initTopNumberGrid();
 
         initLeftNumberGrid();
+
+        initOverviewGrid();
+    }
+
+    private void initOverviewGrid() {
+        GridModel<State> overviewGridModel = new GridModel<>();
+        overviewGridModel.setNumberOfColumns(COLUMNS);
+        overviewGridModel.setNumberOfRows(ROWS);
+
+        GridView<State> overviewGridView = new GridView<>();
+        overviewGridView.setGridModel(overviewGridModel);
+
+        overviewPane.getChildren().add(overviewGridView);
+
+        initAnchor(overviewGridView);
     }
 
 
@@ -93,8 +107,12 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
 
 
     private void initLayout() {
-        final DoubleBinding oneThirdsWidth = rootPane.widthProperty().divide(3);
-        final DoubleBinding oneThirdsHeight = rootPane.heightProperty().divide(3);
+        rootPane.setStyle("-fx-background-color:black");
+
+        double anchorMargin = 1;
+
+        final DoubleBinding oneThirdsWidth = rootPane.widthProperty().subtract(anchorMargin*4).divide(3);
+        final DoubleBinding oneThirdsHeight = rootPane.heightProperty().subtract(anchorMargin*4).divide(3);
 
         final DoubleBinding twoThirdsWidth = oneThirdsWidth.multiply(2);
         final DoubleBinding twoThirdsHeight = oneThirdsHeight.multiply(2);
@@ -111,17 +129,19 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
         bindWidth(centerPane, twoThirdsWidth);
         bindHeight(centerPane, twoThirdsHeight);
 
-        AnchorPane.setTopAnchor(overviewPane, 0.0);
-        AnchorPane.setLeftAnchor(overviewPane,0.0);
 
-        AnchorPane.setTopAnchor(topNumberPane, 0.0);
-        AnchorPane.setRightAnchor(topNumberPane, 0.0);
 
-        AnchorPane.setBottomAnchor(leftNumberPane, 0.0);
-        AnchorPane.setLeftAnchor(leftNumberPane, 0.0);
+        AnchorPane.setTopAnchor(overviewPane, anchorMargin);
+        AnchorPane.setLeftAnchor(overviewPane, anchorMargin);
 
-        AnchorPane.setBottomAnchor(centerPane,0.0);
-        AnchorPane.setRightAnchor(centerPane,0.0);
+        AnchorPane.setTopAnchor(topNumberPane, anchorMargin);
+        AnchorPane.setRightAnchor(topNumberPane, anchorMargin);
+
+        AnchorPane.setBottomAnchor(leftNumberPane, anchorMargin);
+        AnchorPane.setLeftAnchor(leftNumberPane, anchorMargin);
+
+        AnchorPane.setBottomAnchor(centerPane,anchorMargin);
+        AnchorPane.setRightAnchor(centerPane,anchorMargin);
     }
 
     private void bindWidth(Pane pane, ObservableDoubleValue width){
