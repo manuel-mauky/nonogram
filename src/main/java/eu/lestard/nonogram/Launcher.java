@@ -2,6 +2,7 @@ package eu.lestard.nonogram;
 
 import de.saxsys.jfx.mvvm.viewloader.ViewLoader;
 import de.saxsys.jfx.mvvm.viewloader.ViewTuple;
+import eu.lestard.nonogram.core.Puzzle;
 import eu.lestard.nonogram.puzzle.PuzzleView;
 import eu.lestard.nonogram.puzzle.PuzzleViewModel;
 import javafx.application.Application;
@@ -20,6 +21,35 @@ public class Launcher extends Application {
         ViewLoader viewLoader = new ViewLoader();
 
         final ViewTuple<PuzzleView, PuzzleViewModel> viewTuple = viewLoader.loadViewTuple(PuzzleView.class);
+
+
+        Puzzle puzzle = new Puzzle(10);
+
+        puzzle.addHorizontalBlock();
+        puzzle.addHorizontalBlock(1,4,3);
+        puzzle.addHorizontalBlock(3,3);
+        puzzle.addHorizontalBlock();
+        puzzle.addHorizontalBlock(1,4,3);
+        puzzle.addHorizontalBlock(7);
+        puzzle.addHorizontalBlock(1,1,1,1,1);
+        puzzle.addHorizontalBlock(1,1,1,1);
+        puzzle.addHorizontalBlock();
+        puzzle.addHorizontalBlock(7);
+
+        puzzle.addVerticalBlock(4,3);
+        puzzle.addVerticalBlock(4,3);
+        puzzle.addVerticalBlock(4,3);
+        puzzle.addVerticalBlock(4,3);
+        puzzle.addVerticalBlock(4,3);
+        puzzle.addVerticalBlock(4,3);
+        puzzle.addVerticalBlock(1,1,1);
+        puzzle.addVerticalBlock(1,1,1);
+        puzzle.addVerticalBlock(1,1,1);
+        puzzle.addVerticalBlock(1,1,1);
+
+
+        viewTuple.getViewModel().setPuzzle(puzzle);
+
 
         primaryStage.setScene(new Scene(viewTuple.getView(), 700, 700));
 

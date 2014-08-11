@@ -9,6 +9,7 @@ import javafx.beans.binding.DoubleBinding;
 import javafx.beans.value.ObservableDoubleValue;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 
@@ -60,7 +61,22 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
         leftNumberGridView.setGridModel(viewModel.getLeftNumberGridModel());
         leftNumberPane.getChildren().add(leftNumberGridView);
 
+        initNumberGridMapping(leftNumberGridView);
+
         initAnchor(leftNumberGridView);
+    }
+
+    private void initNumberGridMapping(GridView<Numbers> gridView){
+
+        for (Numbers numbers : Numbers.values()) {
+            gridView.addNodeMapping(numbers, cell -> {
+                if(!Numbers.EMPTY.equals(cell.getState())){
+                    return new Label(Integer.toString(cell.getState().getNumber()));
+                }else{
+                    return new Label();
+                }
+            });
+        }
     }
 
     private void initTopNumberGrid() {
@@ -68,6 +84,7 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
         topNumberGridView.setGridModel(viewModel.getTopNumberGridModel());
         topNumberPane.getChildren().add(topNumberGridView);
 
+        initNumberGridMapping(topNumberGridView);
         initAnchor(topNumberGridView);
     }
 
