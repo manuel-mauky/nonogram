@@ -12,6 +12,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 
 public class PuzzleView implements FxmlView<PuzzleViewModel> {
 
@@ -52,6 +53,8 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
 
         overviewPane.getChildren().add(overviewGridView);
 
+        overviewGridView.addColorMapping(State.FILLED, Color.BLACK);
+
         initAnchor(overviewGridView);
     }
 
@@ -91,6 +94,13 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
     private void initCenterGrid() {
         GridView<State> centerGridView = new GridView<>();
         centerGridView.setGridModel(viewModel.getCenterGridModel());
+
+
+        centerGridView.addColorMapping(State.FILLED, Color.BLACK);
+
+        centerGridView.addNodeMapping(State.ERROR, cell -> new Cross(Color.RED));
+
+        centerGridView.addNodeMapping(State.MARKED, cell -> new Cross());
 
         centerPane.getChildren().add(centerGridView);
         initAnchor(centerGridView);
