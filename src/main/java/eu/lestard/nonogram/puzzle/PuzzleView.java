@@ -95,6 +95,7 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
         GridView<State> centerGridView = new GridView<>();
         centerGridView.setGridModel(viewModel.getCenterGridModel());
 
+        centerGridView.addColorMapping(State.EMPTY, Color.WHITE);
 
         centerGridView.addColorMapping(State.FILLED, Color.BLACK);
 

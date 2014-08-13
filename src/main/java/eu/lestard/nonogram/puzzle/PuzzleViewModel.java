@@ -16,19 +16,19 @@ public class PuzzleViewModel implements ViewModel {
     private GridModel<Numbers> topNumberGridModel;
     private GridModel<Numbers> leftNumberGridModel;
 
-
     public PuzzleViewModel(){
-        mainGridModel = new GridModel<>();
-        mainGridModel.setDefaultState(State.EMPTY);
-
         topNumberGridModel = new GridModel<>();
         topNumberGridModel.setDefaultState(Numbers.EMPTY);
 
         leftNumberGridModel = new GridModel<>();
         leftNumberGridModel.setDefaultState(Numbers.EMPTY);
+
+        mainGridModel = new GridModel<>();
+        mainGridModel.setDefaultState(State.EMPTY);
     }
 
-    public void setPuzzle(Puzzle puzzle){
+    public void init(Puzzle puzzle){
+
         mainGridModel.setNumberOfColumns(puzzle.getSize());
         mainGridModel.setNumberOfRows(puzzle.getSize());
 

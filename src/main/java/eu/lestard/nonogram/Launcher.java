@@ -47,9 +47,7 @@ public class Launcher extends Application {
         puzzle.addVerticalBlock(1,1,1);
         puzzle.addVerticalBlock(1,1,1);
 
-
-        viewTuple.getViewModel().setPuzzle(puzzle);
-
+        viewTuple.getViewModel().init(puzzle);
 
         primaryStage.setScene(new Scene(viewTuple.getView(), 700, 700));
 
