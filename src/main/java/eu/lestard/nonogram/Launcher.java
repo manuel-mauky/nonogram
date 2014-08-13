@@ -1,7 +1,7 @@
 package eu.lestard.nonogram;
 
-import de.saxsys.jfx.mvvm.viewloader.ViewLoader;
-import de.saxsys.jfx.mvvm.viewloader.ViewTuple;
+import de.saxsys.mvvmfx.FluentViewLoader;
+import de.saxsys.mvvmfx.ViewTuple;
 import eu.lestard.nonogram.core.Puzzle;
 import eu.lestard.nonogram.puzzle.PuzzleView;
 import eu.lestard.nonogram.puzzle.PuzzleViewModel;
@@ -18,9 +18,8 @@ public class Launcher extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        ViewLoader viewLoader = new ViewLoader();
 
-        final ViewTuple<PuzzleView, PuzzleViewModel> viewTuple = viewLoader.loadViewTuple(PuzzleView.class);
+        final ViewTuple<PuzzleView, PuzzleViewModel> viewTuple = FluentViewLoader.fxmlView(PuzzleView.class).load();
 
 
         Puzzle puzzle = new Puzzle(10);

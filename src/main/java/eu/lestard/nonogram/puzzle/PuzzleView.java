@@ -1,7 +1,7 @@
 package eu.lestard.nonogram.puzzle;
 
-import de.saxsys.jfx.mvvm.api.FxmlView;
-import de.saxsys.jfx.mvvm.api.InjectViewModel;
+import de.saxsys.mvvmfx.FxmlView;
+import de.saxsys.mvvmfx.InjectViewModel;
 import eu.lestard.grid.GridView;
 import eu.lestard.nonogram.core.Numbers;
 import eu.lestard.nonogram.core.State;

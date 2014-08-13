@@ -1,6 +1,6 @@
 package eu.lestard.nonogram.puzzle;
 
-import de.saxsys.jfx.mvvm.api.ViewModel;
+import de.saxsys.mvvmfx.ViewModel;
 import eu.lestard.grid.Cell;
 import eu.lestard.grid.GridModel;
 import eu.lestard.nonogram.core.Numbers;
