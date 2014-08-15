@@ -6,6 +6,7 @@ import eu.lestard.grid.GridModel;
 import eu.lestard.nonogram.core.Numbers;
 import eu.lestard.nonogram.core.Puzzle;
 import eu.lestard.nonogram.core.State;
+import javafx.beans.property.*;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -14,10 +15,17 @@ import java.util.List;
 
 public class PuzzleViewModel implements ViewModel {
 
+    private static final int MAX_ERRORS = 5;
+
     private GridModel<State> mainGridModel;
 
     private GridModel<Numbers> topNumberGridModel;
     private GridModel<Numbers> leftNumberGridModel;
+
+    private ReadOnlyIntegerWrapper maxErrors = new ReadOnlyIntegerWrapper(MAX_ERRORS);
+    private ReadOnlyIntegerWrapper currentErrors = new ReadOnlyIntegerWrapper(0);
+
+    private ReadOnlyBooleanWrapper gameOver = new ReadOnlyBooleanWrapper();
 
     public PuzzleViewModel(){
         topNumberGridModel = new GridModel<>();
@@ -39,6 +47,11 @@ public class PuzzleViewModel implements ViewModel {
         mainGridModel.getCells().forEach(cell->{
 
             final EventHandler<MouseEvent> eventHandler = event -> {
+                if(gameOver.get()){
+                    return;
+                }
+
+
                 if (event.getButton() == MouseButton.PRIMARY) {
 
                     if (cell.getState() == State.FILLED) {
@@ -53,6 +66,7 @@ public class PuzzleViewModel implements ViewModel {
                     if (puzzle.isPoint(cell.getColumn(), cell.getRow())) {
                         cell.changeState(State.FILLED);
                     } else {
+                        currentErrors.set(currentErrors.get() + 1);
                         cell.changeState(State.ERROR);
                     }
 
@@ -70,7 +84,7 @@ public class PuzzleViewModel implements ViewModel {
                     }
                 }
             };
-            
+
             cell.setOnClick(eventHandler);
         });
 
@@ -101,8 +115,11 @@ public class PuzzleViewModel implements ViewModel {
                 final Numbers newState = Numbers.getByInteger(columnNumbers.get(horizontal));
                 cell.changeState(newState);
             }
-
         }
+
+
+        gameOver.bind(currentErrors.greaterThanOrEqualTo(maxErrors));
+
     }
 
 
@@ -122,4 +139,16 @@ public class PuzzleViewModel implements ViewModel {
         return topNumberGridModel;
     }
 
+
+    public ReadOnlyIntegerProperty maxErrorsProperty(){
+        return maxErrors.getReadOnlyProperty();
+    }
+
+    public ReadOnlyIntegerProperty currentErrorsProperty(){
+        return currentErrors.getReadOnlyProperty();
+    }
+
+    public ReadOnlyBooleanProperty gameOverProperty(){
+        return gameOver.getReadOnlyProperty();
+    }
 }

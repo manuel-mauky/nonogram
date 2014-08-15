@@ -22,7 +22,7 @@ public class Launcher extends Application {
         final ViewTuple<PuzzleView, PuzzleViewModel> viewTuple = FluentViewLoader.fxmlView(PuzzleView.class).load();
 
 
-        Puzzle puzzle = new Puzzle(6);
+        Puzzle puzzle = new Puzzle(10);
 
         puzzle.addPoint(0, 0);
         puzzle.addPoint(0, 1);
@@ -33,7 +33,7 @@ public class Launcher extends Application {
 
         viewTuple.getViewModel().init(puzzle);
 
-        primaryStage.setScene(new Scene(viewTuple.getView(), 700, 700));
+        primaryStage.setScene(new Scene(viewTuple.getView()));
 
         primaryStage.setResizable(false);
 
