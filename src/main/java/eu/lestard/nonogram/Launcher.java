@@ -22,29 +22,14 @@ public class Launcher extends Application {
         final ViewTuple<PuzzleView, PuzzleViewModel> viewTuple = FluentViewLoader.fxmlView(PuzzleView.class).load();
 
 
-        Puzzle puzzle = new Puzzle(10);
+        Puzzle puzzle = new Puzzle(6);
 
-        puzzle.addHorizontalBlock();
-        puzzle.addHorizontalBlock(1,4,3);
-        puzzle.addHorizontalBlock(3,3);
-        puzzle.addHorizontalBlock();
-        puzzle.addHorizontalBlock(1,4,3);
-        puzzle.addHorizontalBlock(7);
-        puzzle.addHorizontalBlock(1,1,1,1,1);
-        puzzle.addHorizontalBlock(1,1,1,1);
-        puzzle.addHorizontalBlock();
-        puzzle.addHorizontalBlock(7);
+        puzzle.addPoint(0, 0);
+        puzzle.addPoint(0, 1);
+        puzzle.addPoint(0, 3);
+        puzzle.addPoint(1, 1);
+        puzzle.addPoint(4, 2);
 
-        puzzle.addVerticalBlock(4,3);
-        puzzle.addVerticalBlock(4,3);
-        puzzle.addVerticalBlock(4,3);
-        puzzle.addVerticalBlock(4,3);
-        puzzle.addVerticalBlock(4,3);
-        puzzle.addVerticalBlock(4,3);
-        puzzle.addVerticalBlock(1,1,1);
-        puzzle.addVerticalBlock(1,1,1);
-        puzzle.addVerticalBlock(1,1,1);
-        puzzle.addVerticalBlock(1,1,1);
 
         viewTuple.getViewModel().init(puzzle);
 

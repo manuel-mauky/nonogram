@@ -25,6 +25,7 @@ public class PuzzleViewModel implements ViewModel {
 
         mainGridModel = new GridModel<>();
         mainGridModel.setDefaultState(State.EMPTY);
+
     }
 
     public void init(Puzzle puzzle){
@@ -40,7 +41,8 @@ public class PuzzleViewModel implements ViewModel {
 
 
         for(int i=0 ; i<puzzle.getSize() ; i++){
-            final List<Integer> verticalNumbers = puzzle.getVertical().get(i).getNumbers();
+
+            final List<Integer> verticalNumbers = puzzle.getColumnNumbers(i);
 
             for (int vertical = 0; vertical < verticalNumbers.size(); vertical++) {
                 int offset = puzzle.getSize()/2 - verticalNumbers.size();
@@ -50,7 +52,7 @@ public class PuzzleViewModel implements ViewModel {
             }
 
 
-            final List<Integer> horizontalNumbers = puzzle.getHorizontal().get(i).getNumbers();
+            final List<Integer> horizontalNumbers = puzzle.getRowNumbers(i);
 
             for (int horizontal = 0; horizontal < horizontalNumbers.size(); horizontal++) {
                 int offset = puzzle.getSize()/2 - horizontalNumbers.size();

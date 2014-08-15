@@ -2,39 +2,59 @@ package eu.lestard.nonogram.core;
 
 import org.junit.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 
 public class PuzzleTest {
 
 
+
     @Test
-    public void testValidateNumbers(){
+    public void testPuzzleGrid(){
 
-        Puzzle puzzle = new Puzzle(10);
+        Puzzle puzzle = new Puzzle(4);
+
+        assertThat(puzzle.getColumnNumbers(0)).isEmpty();
+        assertThat(puzzle.getColumnNumbers(1)).isEmpty();
+        assertThat(puzzle.getColumnNumbers(2)).isEmpty();
+        assertThat(puzzle.getColumnNumbers(3)).isEmpty();
+
+        assertThat(puzzle.getRowNumbers(0)).isEmpty();
+        assertThat(puzzle.getRowNumbers(1)).isEmpty();
+        assertThat(puzzle.getRowNumbers(2)).isEmpty();
+        assertThat(puzzle.getRowNumbers(3)).isEmpty();
 
 
-        assertThat(puzzle.validateNumbers()).isTrue();
-        assertThat(puzzle.validateNumbers(1)).isTrue();
-        assertThat(puzzle.validateNumbers(1,1)).isTrue();
-        assertThat(puzzle.validateNumbers(1,1,1)).isTrue();
-        assertThat(puzzle.validateNumbers(1,1,1,1)).isTrue();
-        assertThat(puzzle.validateNumbers(1,1,1,1,1)).isTrue();
 
-        assertThat(puzzle.validateNumbers(3)).isTrue();
-        assertThat(puzzle.validateNumbers(3,3)).isTrue();
-        assertThat(puzzle.validateNumbers(3,3,1)).isTrue();
-        assertThat(puzzle.validateNumbers(3,3,2)).isTrue();
+        puzzle.addPoint(1,1);
 
-        assertThat(puzzle.validateNumbers(8)).isTrue();
-        assertThat(puzzle.validateNumbers(9)).isTrue();
-        assertThat(puzzle.validateNumbers(10)).isTrue();
+        assertThat(puzzle.getColumnNumbers(1)).containsOnly(1);
+        assertThat(puzzle.getRowNumbers(1)).containsOnly(1);
 
-        assertThat(puzzle.validateNumbers(1,1,1,1,1,1)).isFalse();
-        assertThat(puzzle.validateNumbers(2,2,2,2)).isFalse();
-        assertThat(puzzle.validateNumbers(3,3,3)).isFalse();
-        assertThat(puzzle.validateNumbers(5,5)).isFalse();
-        assertThat(puzzle.validateNumbers(11)).isFalse();
+
+        puzzle.addPoint(1, 2);
+
+        assertThat(puzzle.getColumnNumbers(1)).containsOnly(2);
+        assertThat(puzzle.getRowNumbers(1)).containsOnly(1);
+        assertThat(puzzle.getRowNumbers(2)).containsOnly(1);
+
+
+        puzzle.addPoint(3, 1);
+        assertThat(puzzle.getRowNumbers(1)).containsOnly(1,1);
+
+
+        puzzle.addPoint(0, 1);
+        assertThat(puzzle.getRowNumbers(1)).containsOnly(2,1);
+
+
+
+        assertThat(puzzle.isPoint(0,0)).isFalse();
+        assertThat(puzzle.isPoint(2,2)).isFalse();
+        assertThat(puzzle.isPoint(1,1)).isTrue();
+        assertThat(puzzle.isPoint(1,2)).isTrue();
+        assertThat(puzzle.isPoint(3,1)).isTrue();
+        assertThat(puzzle.isPoint(0,1)).isTrue();
+
+
     }
-
 
 }
