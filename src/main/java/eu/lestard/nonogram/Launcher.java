@@ -9,6 +9,8 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.util.Random;
+
 public class Launcher extends Application {
 
     public static void main(String...args){
@@ -22,13 +24,7 @@ public class Launcher extends Application {
         final ViewTuple<PuzzleView, PuzzleViewModel> viewTuple = FluentViewLoader.fxmlView(PuzzleView.class).load();
 
 
-        Puzzle puzzle = new Puzzle(10);
-
-        puzzle.addPoint(0, 0);
-        puzzle.addPoint(0, 1);
-        puzzle.addPoint(0, 3);
-        puzzle.addPoint(1, 1);
-        puzzle.addPoint(4, 2);
+        Puzzle puzzle = createRandomPuzzle(10);
 
 
         viewTuple.getViewModel().init(puzzle);
@@ -38,6 +34,22 @@ public class Launcher extends Application {
         primaryStage.setResizable(false);
 
         primaryStage.show();
+    }
 
+
+    private Puzzle createRandomPuzzle(int size){
+
+        Puzzle puzzle = new Puzzle(size);
+
+        Random rand = new Random();
+
+        for(int i=0 ; i<(size*size) ; i++){
+            int column = rand.nextInt(size);
+            int row = rand.nextInt(size);
+
+            puzzle.addPoint(column, row);
+        }
+
+        return puzzle;
     }
 }
