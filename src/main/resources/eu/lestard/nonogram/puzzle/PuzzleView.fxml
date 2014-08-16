@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
@@ -9,7 +10,10 @@
 
     <AnchorPane fx:id="rootPane" prefHeight="600.0" prefWidth="600.0">
          <children>
-              <AnchorPane fx:id="overviewPane" />
+              <AnchorPane fx:id="overviewPane" style="-fx-background-color: white;">
+               <padding>
+                  <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+               </padding></AnchorPane>
               <AnchorPane fx:id="topNumberPane" />
               <AnchorPane fx:id="leftNumberPane" />
               <AnchorPane fx:id="centerPane" />
