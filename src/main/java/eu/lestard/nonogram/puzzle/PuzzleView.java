@@ -17,8 +17,6 @@ import javafx.scene.paint.Color;
 
 public class PuzzleView implements FxmlView<PuzzleViewModel> {
 
-    private static final int ERROR_BOX_SIZE = 25;
-
     @FXML
     private AnchorPane centerPane;
 
@@ -115,6 +113,7 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
         centerGridView.addNodeMapping(State.ERROR, cell -> new Cross(Color.RED));
 
         centerGridView.addNodeMapping(State.MARKED, cell -> new Cross());
+
 
         centerPane.getChildren().add(centerGridView);
         initAnchor(centerGridView);

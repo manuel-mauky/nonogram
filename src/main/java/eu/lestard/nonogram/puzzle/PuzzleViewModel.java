@@ -6,7 +6,10 @@ import eu.lestard.grid.GridModel;
 import eu.lestard.nonogram.core.Numbers;
 import eu.lestard.nonogram.core.Puzzle;
 import eu.lestard.nonogram.core.State;
-import javafx.beans.property.*;
+import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.ReadOnlyBooleanWrapper;
+import javafx.beans.property.ReadOnlyIntegerProperty;
+import javafx.beans.property.ReadOnlyIntegerWrapper;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -77,6 +80,7 @@ public class PuzzleViewModel implements ViewModel {
 
                     if (cell.getState() == State.EMPTY) {
                         cell.changeState(State.MARKED);
+                        return;
                     }
 
                     if (cell.getState() == State.MARKED) {
