@@ -3,7 +3,6 @@ package eu.lestard.nonogram.puzzle;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import eu.lestard.grid.GridView;
-import eu.lestard.nonogram.core.Numbers;
 import eu.lestard.nonogram.core.State;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.value.ObservableDoubleValue;
@@ -71,7 +70,7 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
 
 
     private void initLeftNumberGrid() {
-        GridView<Numbers> leftNumberGridView = new GridView<>();
+        GridView<Integer> leftNumberGridView = new GridView<>();
         leftNumberGridView.setGridModel(viewModel.getLeftNumberGridModel());
         leftNumberPane.getChildren().add(leftNumberGridView);
 
@@ -80,21 +79,17 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
         initAnchor(leftNumberGridView);
     }
 
-    private void initNumberGridMapping(GridView<Numbers> gridView){
-
-        for (Numbers numbers : Numbers.values()) {
-            gridView.addNodeMapping(numbers, cell -> {
-                if(!Numbers.EMPTY.equals(cell.getState())){
-                    return new Label(Integer.toString(cell.getState().getNumber()));
-                }else{
-                    return new Label();
-                }
-            });
-        }
+    private void initNumberGridMapping(GridView<Integer> gridView){
+        viewModel.sizeProperty().addListener((obs,oldV, newV) ->{
+            for(int i=1 ; i<=newV.intValue() ; i++){
+                final String labelText = Integer.toString(i);
+                gridView.addNodeMapping(i, cell-> new Label(labelText));
+            }
+        });
     }
 
     private void initTopNumberGrid() {
-        GridView<Numbers> topNumberGridView = new GridView<>();
+        GridView<Integer> topNumberGridView = new GridView<>();
         topNumberGridView.setGridModel(viewModel.getTopNumberGridModel());
         topNumberPane.getChildren().add(topNumberGridView);
 
@@ -113,7 +108,6 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
         centerGridView.addNodeMapping(State.ERROR, cell -> new Cross(Color.RED));
 
         centerGridView.addNodeMapping(State.MARKED, cell -> new Cross());
-
 
         centerPane.getChildren().add(centerGridView);
         initAnchor(centerGridView);
