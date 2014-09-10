@@ -3,31 +3,30 @@ package eu.lestard.nonogram.puzzle;
 import de.saxsys.mvvmfx.ViewModel;
 import eu.lestard.grid.Cell;
 import eu.lestard.grid.GridModel;
+import eu.lestard.nonogram.core.GameInstance;
 import eu.lestard.nonogram.core.Puzzle;
 import eu.lestard.nonogram.core.State;
-import javafx.beans.property.ReadOnlyBooleanProperty;
-import javafx.beans.property.ReadOnlyBooleanWrapper;
-import javafx.beans.property.ReadOnlyIntegerProperty;
-import javafx.beans.property.ReadOnlyIntegerWrapper;
+import javafx.beans.property.*;
 import javafx.scene.input.MouseButton;
 
 import java.util.List;
 
 public class PuzzleViewModel implements ViewModel {
 
-    private static final int MAX_ERRORS = 5;
-
-    private GridModel<State> mainGridModel;
+    private ReadOnlyObjectWrapper<GridModel<State>> mainGridModel = new ReadOnlyObjectWrapper<>();
 
     private GridModel<Integer> topNumberGridModel;
     private GridModel<Integer> leftNumberGridModel;
 
-    private ReadOnlyIntegerWrapper maxErrors = new ReadOnlyIntegerWrapper(MAX_ERRORS);
-    private ReadOnlyIntegerWrapper currentErrors = new ReadOnlyIntegerWrapper(0);
+    private ReadOnlyIntegerWrapper size = new ReadOnlyIntegerWrapper();
+    private GameInstance gameInstance;
 
     private ReadOnlyBooleanWrapper gameOver = new ReadOnlyBooleanWrapper();
 
-    private ReadOnlyIntegerWrapper size = new ReadOnlyIntegerWrapper();
+    private ReadOnlyIntegerWrapper maxErrors = new ReadOnlyIntegerWrapper();
+    private ReadOnlyIntegerWrapper currentErrors = new ReadOnlyIntegerWrapper(0);
+
+
 
     public PuzzleViewModel(){
         topNumberGridModel = new GridModel<>();
@@ -35,23 +34,23 @@ public class PuzzleViewModel implements ViewModel {
 
         leftNumberGridModel = new GridModel<>();
         leftNumberGridModel.setDefaultState(0);
-
-        mainGridModel = new GridModel<>();
-        mainGridModel.setDefaultState(State.EMPTY);
-
     }
 
-    public void init(Puzzle puzzle){
+    public void init(Puzzle puzzle, GameInstance gameInstance){
+        this.gameInstance = gameInstance;
+        maxErrors.set(gameInstance.maxErrors().get());
+        currentErrors.bind(gameInstance.errors());
+
+        gameOver.bind(gameInstance.gameOver());
+
+        mainGridModel.set(gameInstance.getGridModel());
 
         size.set(puzzle.getSize());
 
-        mainGridModel.setNumberOfColumns(puzzle.getSize());
-        mainGridModel.setNumberOfRows(puzzle.getSize());
-
-        mainGridModel.getCells().forEach(cell->{
+        gameInstance.getGridModel().getCells().forEach(cell -> {
 
             cell.setOnClick(event -> {
-                if(gameOver.get()){
+                if (gameInstance.gameOver().get()) {
                     return;
                 }
 
@@ -59,13 +58,13 @@ public class PuzzleViewModel implements ViewModel {
                     onPrimaryDown(puzzle, cell);
                 }
 
-                if(event.getButton() == MouseButton.SECONDARY){
+                if (event.getButton() == MouseButton.SECONDARY) {
                     onSecondaryDown(cell);
                 }
             });
 
             cell.setOnMouseOver(event -> {
-                if(gameOver.get()){
+                if (gameInstance.gameOver().get()) {
                     return;
                 }
 
@@ -73,7 +72,7 @@ public class PuzzleViewModel implements ViewModel {
                     onPrimaryDown(puzzle, cell);
                 }
 
-                if(event.isSecondaryButtonDown()){
+                if (event.isSecondaryButtonDown()) {
                     onSecondaryDown(cell);
                 }
             });
@@ -105,44 +104,22 @@ public class PuzzleViewModel implements ViewModel {
                 cell.changeState(columnNumbers.get(horizontal));
             }
         }
-
-
-        gameOver.bind(currentErrors.greaterThanOrEqualTo(maxErrors));
     }
 
     private void onPrimaryDown(Puzzle puzzle, Cell<State> cell) {
-        if (cell.getState() == State.FILLED) {
-            return;
-        }
-
-        if (cell.getState() == State.MARKED) {
-            cell.changeState(State.EMPTY);
-            return;
-        }
-
-        if (puzzle.isPoint(cell.getColumn(), cell.getRow())) {
-            cell.changeState(State.FILLED);
-        } else {
-            currentErrors.set(currentErrors.get() + 1);
-            cell.changeState(State.ERROR);
-        }
+        gameInstance.reveale(cell.getColumn(), cell.getRow());
     }
 
     private void onSecondaryDown(Cell<State> cell) {
-        if (cell.getState() == State.EMPTY) {
-            cell.changeState(State.MARKED);
-        }else if (cell.getState() == State.MARKED){
-            cell.changeState(State.EMPTY);
-        }
+        gameInstance.mark(cell.getColumn(), cell.getRow());
     }
 
-
-    public GridModel<State> getCenterGridModel(){
-        return mainGridModel;
+    public ReadOnlyObjectProperty<GridModel<State>> centerGridModelProperty(){
+        return mainGridModel.getReadOnlyProperty();
     }
 
-    public GridModel<State> getOverviewGridModel(){
-        return mainGridModel;
+    public ReadOnlyObjectProperty<GridModel<State>> overviewGridModelProperty(){
+        return mainGridModel.getReadOnlyProperty();
     }
 
     public GridModel<Integer> getLeftNumberGridModel(){

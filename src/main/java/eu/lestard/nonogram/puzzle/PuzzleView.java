@@ -41,13 +41,21 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
     public void initialize(){
         initLayout();
 
-        initCenterGrid();
+        viewModel.centerGridModelProperty().addListener((obs, oldValue, newValue) -> {
+            if(newValue != null){
+                initCenterGrid();
+            }
+        });
 
         initTopNumberGrid();
 
         initLeftNumberGrid();
 
-        initOverviewGrid();
+        viewModel.overviewGridModelProperty().addListener((obs, oldValue, newValue) -> {
+            if (newValue != null) {
+                initOverviewGrid();
+            }
+        });
 
 
         viewModel.currentErrorsProperty().addListener((observable, oldValue, newValue)->{
@@ -59,7 +67,7 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
 
     private void initOverviewGrid() {
         GridView<State> overviewGridView = new GridView<>();
-        overviewGridView.setGridModel(viewModel.getOverviewGridModel());
+        overviewGridView.setGridModel(viewModel.overviewGridModelProperty().get());
 
         overviewPane.getChildren().add(overviewGridView);
 
@@ -99,7 +107,7 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
 
     private void initCenterGrid() {
         GridView<State> centerGridView = new GridView<>();
-        centerGridView.setGridModel(viewModel.getCenterGridModel());
+        centerGridView.setGridModel(viewModel.centerGridModelProperty().get());
 
         centerGridView.addColorMapping(State.EMPTY, Color.WHITE);
 

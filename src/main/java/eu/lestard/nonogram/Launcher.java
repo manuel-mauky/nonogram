@@ -2,6 +2,7 @@ package eu.lestard.nonogram;
 
 import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.ViewTuple;
+import eu.lestard.nonogram.core.GameInstance;
 import eu.lestard.nonogram.core.Puzzle;
 import eu.lestard.nonogram.puzzle.PuzzleView;
 import eu.lestard.nonogram.puzzle.PuzzleViewModel;
@@ -26,8 +27,7 @@ public class Launcher extends Application {
 
         Puzzle puzzle = createRandomPuzzle(10);
 
-
-        viewTuple.getViewModel().init(puzzle);
+        viewTuple.getViewModel().init(puzzle, new GameInstance(puzzle));
 
         primaryStage.setScene(new Scene(viewTuple.getView()));
 
