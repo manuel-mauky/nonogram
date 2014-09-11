@@ -107,7 +107,7 @@ public class PuzzleViewModel implements ViewModel {
     }
 
     private void onPrimaryDown(Puzzle puzzle, Cell<State> cell) {
-        gameInstance.reveale(cell.getColumn(), cell.getRow());
+        gameInstance.reveal(cell.getColumn(), cell.getRow());
     }
 
     private void onSecondaryDown(Cell<State> cell) {

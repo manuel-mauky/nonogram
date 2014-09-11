@@ -37,6 +37,7 @@ public class GameInstance {
 
     private ReadOnlyBooleanWrapper gameOver = new ReadOnlyBooleanWrapper();
 
+    private ReadOnlyBooleanWrapper win = new ReadOnlyBooleanWrapper();
 
     /**
      * The list of column/row indexes that are already finished correctly.
@@ -69,9 +70,9 @@ public class GameInstance {
     }
 
     /**
-     * Reveale the cell with the given coordinates.
+     * Reveal the cell with the given coordinates.
      */
-    public void reveale(int column, int row){
+    public void reveal(int column, int row){
         final Cell<State> cell = gridModel.getCell(column, row);
 
         if (cell.getState() == State.FILLED) {
@@ -105,14 +106,18 @@ public class GameInstance {
 
 
     public ReadOnlyIntegerProperty errors(){
-        return errors;
+        return errors.getReadOnlyProperty();
     }
 
     public ReadOnlyIntegerProperty maxErrors(){
-        return maxErrors;
+        return maxErrors.getReadOnlyProperty();
     }
 
     public ReadOnlyBooleanProperty gameOver(){
-        return gameOver;
+        return gameOver.getReadOnlyProperty();
+    }
+
+    public ReadOnlyBooleanProperty win(){
+        return win.getReadOnlyProperty();
     }
 }
