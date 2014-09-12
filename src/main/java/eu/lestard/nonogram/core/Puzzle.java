@@ -66,4 +66,25 @@ public class Puzzle {
         return numbers;
     }
 
+
+    @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+        result.append("Puzzle (size=").append(size).append(")\n");
+
+        for(int row=0 ; row<size ; row++){
+            for(int column=0 ; column<size ; column++){
+                result.append("[");
+                if(isPoint(column, row)){
+                    result.append("x");
+                }else{
+                    result.append(" ");
+                }
+                result.append("]");
+            }
+            result.append("\n");
+        }
+
+        return result.toString();
+    }
 }

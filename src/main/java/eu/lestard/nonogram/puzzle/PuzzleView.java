@@ -58,9 +58,8 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
         });
 
 
-        viewModel.currentErrorsProperty().addListener((observable, oldValue, newValue)->{
-            updateErrorsBox();
-        });
+        viewModel.currentErrorsProperty().addListener(observable-> updateErrorsBox());
+        viewModel.maxErrorsProperty().addListener(observable -> updateErrorsBox());
 
         updateErrorsBox();
     }
@@ -179,7 +178,6 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
     }
 
     private void updateErrorsBox(){
-
         errorsBox.getChildren().clear();
 
         final int currentErrors = viewModel.currentErrorsProperty().get();

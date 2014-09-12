@@ -48,7 +48,6 @@ public class PuzzleViewModel implements ViewModel {
         size.set(puzzle.getSize());
 
         gameInstance.getGridModel().getCells().forEach(cell -> {
-
             cell.setOnClick(event -> {
                 if (gameInstance.gameOver().get()) {
                     return;
@@ -78,19 +77,19 @@ public class PuzzleViewModel implements ViewModel {
             });
         });
 
+
         topNumberGridModel.setNumberOfColumns(puzzle.getSize());
-        topNumberGridModel.setNumberOfRows(puzzle.getSize()/2);
+        topNumberGridModel.setNumberOfRows((int)Math.ceil(puzzle.getSize() / 2.0));
 
-        leftNumberGridModel.setNumberOfColumns(puzzle.getSize()/2);
+        leftNumberGridModel.setNumberOfColumns((int)Math.ceil(puzzle.getSize() / 2.0));
         leftNumberGridModel.setNumberOfRows(puzzle.getSize());
-
 
         for(int i=0 ; i<puzzle.getSize() ; i++){
 
             final List<Integer> rowNumbers = puzzle.getRowNumbers(i);
 
             for (int vertical = 0; vertical < rowNumbers.size(); vertical++) {
-                int offset = puzzle.getSize()/2 - rowNumbers.size();
+                int offset = leftNumberGridModel.getNumberOfColumns() - rowNumbers.size();
                 final Cell<Integer> cell = leftNumberGridModel.getCell(offset + vertical, i);
                 cell.changeState(rowNumbers.get(vertical));
             }
@@ -99,7 +98,7 @@ public class PuzzleViewModel implements ViewModel {
             final List<Integer> columnNumbers = puzzle.getColumnNumbers(i);
 
             for (int horizontal = 0; horizontal < columnNumbers.size(); horizontal++) {
-                int offset = puzzle.getSize()/2 - columnNumbers.size();
+                int offset = topNumberGridModel.getNumberOfRows() - columnNumbers.size();
                 final Cell<Integer> cell = topNumberGridModel.getCell(i, offset + horizontal);
                 cell.changeState(columnNumbers.get(horizontal));
             }

@@ -1,0 +1,157 @@
+package eu.lestard.nonogram.puzzle;
+
+import eu.lestard.grid.Cell;
+import eu.lestard.grid.GridModel;
+import eu.lestard.nonogram.core.GameInstance;
+import eu.lestard.nonogram.core.Puzzle;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.assertj.core.api.Assertions.*;
+
+public class PuzzleViewModelTest {
+
+    private PuzzleViewModel viewModel;
+
+    private Puzzle puzzle3;
+    private Puzzle puzzle4;
+    private Puzzle puzzle5;
+
+    private GameInstance gameInstance;
+
+    @Before
+    public void setup() {
+
+        viewModel = new PuzzleViewModel();
+
+        //        [ ][x][x]
+        //        [ ][x][ ]
+        //        [ ][x][x]
+        puzzle3 = new Puzzle(3);
+        puzzle3.addPoint(1, 0);
+        puzzle3.addPoint(2, 0);
+        puzzle3.addPoint(1, 1);
+        puzzle3.addPoint(1, 2);
+        puzzle3.addPoint(2, 2);
+
+        //        [ ][x][ ][x]
+        //        [x][x][x][ ]
+        //        [ ][x][ ][ ]
+        //        [x][x][ ][x]
+        puzzle4 = new Puzzle(4);
+        puzzle4.addPoint(0, 1);
+        puzzle4.addPoint(0, 3);
+        puzzle4.addPoint(1, 0);
+        puzzle4.addPoint(1, 1);
+        puzzle4.addPoint(1, 2);
+        puzzle4.addPoint(1, 3);
+        puzzle4.addPoint(2, 1);
+        puzzle4.addPoint(3, 0);
+        puzzle4.addPoint(3, 3);
+
+        //        [x][x][ ][ ][x]
+        //        [ ][x][ ][ ][ ]
+        //        [x][x][ ][ ][ ]
+        //        [ ][x][ ][x][ ]
+        //        [x][x][ ][ ][ ]
+        puzzle5 = new Puzzle(5);
+        puzzle5.addPoint(0, 0);
+        puzzle5.addPoint(0, 2);
+        puzzle5.addPoint(0, 4);
+        puzzle5.addPoint(1, 0);
+        puzzle5.addPoint(1, 1);
+        puzzle5.addPoint(1, 2);
+        puzzle5.addPoint(1, 3);
+        puzzle5.addPoint(1, 4);
+        puzzle5.addPoint(4, 0);
+        puzzle5.addPoint(3, 3);
+    }
+
+
+    @Test
+    public void testNumberGridModelsForPuzzleWithSizeOf3() {
+        gameInstance = new GameInstance(puzzle3);
+        viewModel.init(puzzle3, gameInstance);
+
+        final GridModel<Integer> left = viewModel.getLeftNumberGridModel();
+
+        assertThat(left.getNumberOfColumns()).isEqualTo(2);
+        assertThat(left.getNumberOfRows()).isEqualTo(3);
+
+        assertThat(getCellValues(left.getCellsOfRow(0))).containsExactly(0, 2);
+        assertThat(getCellValues(left.getCellsOfRow(1))).containsExactly(0, 1);
+        assertThat(getCellValues(left.getCellsOfRow(2))).containsExactly(0, 2);
+
+        final GridModel<Integer> top = viewModel.getTopNumberGridModel();
+
+        assertThat(top.getNumberOfColumns()).isEqualTo(3);
+        assertThat(top.getNumberOfRows()).isEqualTo(2);
+
+        assertThat(getCellValues(top.getCellsOfColumn(0))).containsExactly(0, 0);
+        assertThat(getCellValues(top.getCellsOfColumn(1))).containsExactly(0, 3);
+        assertThat(getCellValues(top.getCellsOfColumn(2))).containsExactly(1, 1);
+    }
+
+    @Test
+    public void testNumberGridModelsForPuzzleWithSizeOf4() {
+        gameInstance = new GameInstance(puzzle4);
+        viewModel.init(puzzle4, gameInstance);
+
+        final GridModel<Integer> left = viewModel.getLeftNumberGridModel();
+
+        assertThat(left.getNumberOfColumns()).isEqualTo(2);
+        assertThat(left.getNumberOfRows()).isEqualTo(4);
+
+        assertThat(getCellValues(left.getCellsOfRow(0))).containsExactly(1, 1);
+        assertThat(getCellValues(left.getCellsOfRow(1))).containsExactly(0, 3);
+        assertThat(getCellValues(left.getCellsOfRow(2))).containsExactly(0, 1);
+        assertThat(getCellValues(left.getCellsOfRow(3))).containsExactly(2, 1);
+
+        final GridModel<Integer> top = viewModel.getTopNumberGridModel();
+
+        assertThat(top.getNumberOfColumns()).isEqualTo(4);
+        assertThat(top.getNumberOfRows()).isEqualTo(2);
+
+        assertThat(getCellValues(top.getCellsOfColumn(0))).containsExactly(1, 1);
+        assertThat(getCellValues(top.getCellsOfColumn(1))).containsExactly(0, 4);
+        assertThat(getCellValues(top.getCellsOfColumn(2))).containsExactly(0, 1);
+        assertThat(getCellValues(top.getCellsOfColumn(3))).containsExactly(1, 1);
+    }
+
+
+    @Test
+    public void testNumberGridModelsForPuzzleWithSizeOf5() {
+        gameInstance = new GameInstance(puzzle5);
+        viewModel.init(puzzle5, gameInstance);
+
+        final GridModel<Integer> left = viewModel.getLeftNumberGridModel();
+        assertThat(left.getNumberOfColumns()).isEqualTo(3);
+        assertThat(left.getNumberOfRows()).isEqualTo(5);
+
+        assertThat(getCellValues(left.getCellsOfRow(0))).containsExactly(0, 2, 1);
+        assertThat(getCellValues(left.getCellsOfRow(1))).containsExactly(0, 0, 1);
+        assertThat(getCellValues(left.getCellsOfRow(2))).containsExactly(0, 0, 2);
+        assertThat(getCellValues(left.getCellsOfRow(3))).containsExactly(0, 1, 1);
+        assertThat(getCellValues(left.getCellsOfRow(4))).containsExactly(0, 0, 2);
+
+        final GridModel<Integer> top = viewModel.getTopNumberGridModel();
+        assertThat(top.getNumberOfColumns()).isEqualTo(5);
+        assertThat(top.getNumberOfRows()).isEqualTo(3);
+
+        assertThat(getCellValues(top.getCellsOfColumn(0))).containsExactly(1, 1, 1);
+        assertThat(getCellValues(top.getCellsOfColumn(1))).containsExactly(0, 0, 5);
+        assertThat(getCellValues(top.getCellsOfColumn(2))).containsExactly(0, 0, 0);
+        assertThat(getCellValues(top.getCellsOfColumn(3))).containsExactly(0, 0, 1);
+        assertThat(getCellValues(top.getCellsOfColumn(4))).containsExactly(0, 0, 1);
+
+
+    }
+
+
+    private List<Integer> getCellValues(List<Cell<Integer>> cells) {
+        return cells.stream().map(Cell::getState).collect(Collectors.toList());
+    }
+}
