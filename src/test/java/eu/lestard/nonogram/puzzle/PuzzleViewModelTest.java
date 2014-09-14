@@ -10,7 +10,9 @@ import org.junit.Test;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static eu.lestard.assertj.javafx.api.Assertions.assertThat;
+
 
 public class PuzzleViewModelTest {
 
@@ -150,6 +152,25 @@ public class PuzzleViewModelTest {
 
     }
 
+    @Test
+    public void testWidthAndHeightOfCenterAndOverviewPane(){
+        gameInstance = new GameInstance(puzzle3);
+        viewModel.init(puzzle3, gameInstance);
+
+        viewModel.rootHeightProperty().set(100);
+        viewModel.rootWidthProperty().set(100);
+
+        // (full height / (number of center cells + number of overview cells)) * number of center cells
+        // (100 / (3 + 2)) * 3
+        assertThat(viewModel.centerHeightProperty()).hasValue((100 / (3+2)) *3);
+        assertThat(viewModel.centerWidthProperty()).hasValue((100 / (3+2)) *3);
+
+
+        // (full height / (number of center cells + number of overview cells)) * number of overview cells
+        assertThat(viewModel.overviewHeight()).hasValue((100 / (3+2)) * 2);
+        assertThat(viewModel.overviewWidth()).hasValue((100 / (3+2)) * 2);
+
+    }
 
     private List<Integer> getCellValues(List<Cell<Integer>> cells) {
         return cells.stream().map(Cell::getState).collect(Collectors.toList());

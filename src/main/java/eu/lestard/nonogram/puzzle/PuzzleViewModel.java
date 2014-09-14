@@ -6,7 +6,10 @@ import eu.lestard.grid.GridModel;
 import eu.lestard.nonogram.core.GameInstance;
 import eu.lestard.nonogram.core.Puzzle;
 import eu.lestard.nonogram.core.State;
+import javafx.beans.binding.DoubleBinding;
+import javafx.beans.binding.NumberBinding;
 import javafx.beans.property.*;
+import javafx.beans.value.ObservableNumberValue;
 import javafx.scene.input.MouseButton;
 
 import java.util.List;
@@ -27,6 +30,14 @@ public class PuzzleViewModel implements ViewModel {
     private ReadOnlyIntegerWrapper currentErrors = new ReadOnlyIntegerWrapper(0);
 
 
+    private ReadOnlyDoubleWrapper centerWidth = new ReadOnlyDoubleWrapper();
+    private ReadOnlyDoubleWrapper centerHeight = new ReadOnlyDoubleWrapper();
+    private ReadOnlyDoubleWrapper overviewWidth = new ReadOnlyDoubleWrapper();
+    private ReadOnlyDoubleWrapper overviewHeight = new ReadOnlyDoubleWrapper();
+
+
+    private DoubleProperty rootWidth = new SimpleDoubleProperty();
+    private DoubleProperty rootHeight = new SimpleDoubleProperty();
 
     public PuzzleViewModel(){
         topNumberGridModel = new GridModel<>();
@@ -103,6 +114,26 @@ public class PuzzleViewModel implements ViewModel {
                 cell.changeState(columnNumbers.get(horizontal));
             }
         }
+
+
+        ObservableNumberValue numberOfCenterColumns = mainGridModel.get().numberOfColumns();
+        ObservableNumberValue numberOfCenterRows = mainGridModel.get().numberOfRows();
+
+        final IntegerProperty numberOfLeftColumns = leftNumberGridModel.numberOfColumns();
+        final NumberBinding numberOfColumns = numberOfLeftColumns.add(numberOfCenterColumns);
+        final DoubleBinding widthOfEveryColumn = rootWidth.divide(numberOfColumns);
+
+        final IntegerProperty numberOfTopRows = topNumberGridModel.numberOfRows();
+        final NumberBinding numberOfRows = numberOfTopRows.add(numberOfCenterRows);
+        final DoubleBinding heightOfEveryRow = rootHeight.divide(numberOfRows);
+
+
+        centerWidth.bind(widthOfEveryColumn.multiply(numberOfCenterColumns));
+        centerHeight.bind(heightOfEveryRow.multiply(numberOfCenterRows));
+
+
+        overviewWidth.bind(widthOfEveryColumn.multiply(numberOfLeftColumns));
+        overviewHeight.bind(heightOfEveryRow.multiply(numberOfTopRows));
     }
 
     private void onPrimaryDown(Puzzle puzzle, Cell<State> cell) {
@@ -144,5 +175,29 @@ public class PuzzleViewModel implements ViewModel {
 
     public ReadOnlyIntegerProperty sizeProperty(){
         return size.getReadOnlyProperty();
+    }
+
+    public ReadOnlyDoubleProperty centerWidthProperty(){
+        return centerWidth;
+    }
+
+    public ReadOnlyDoubleProperty centerHeightProperty(){
+        return centerHeight;
+    }
+
+    public ReadOnlyDoubleProperty overviewWidth(){
+        return overviewWidth;
+    }
+
+    public ReadOnlyDoubleProperty overviewHeight(){
+        return overviewHeight;
+    }
+
+    public DoubleProperty rootWidthProperty(){
+        return rootWidth;
+    }
+
+    public DoubleProperty rootHeightProperty(){
+        return rootHeight;
     }
 }

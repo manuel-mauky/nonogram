@@ -4,10 +4,6 @@ import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import eu.lestard.grid.GridView;
 import eu.lestard.nonogram.core.State;
-import javafx.beans.binding.DoubleBinding;
-import javafx.beans.binding.NumberBinding;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ObservableDoubleValue;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -137,40 +133,20 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
 
         double anchorMargin = 1;
 
+        viewModel.rootHeightProperty().bind(rootPane.heightProperty().subtract(4 * anchorMargin));
+        viewModel.rootWidthProperty().bind(rootPane.widthProperty().subtract(4 * anchorMargin));
 
-        IntegerProperty numberOfCenterColumns = new SimpleIntegerProperty();
-        IntegerProperty numberOfCenterRows = new SimpleIntegerProperty();
-        viewModel.centerGridModelProperty().addListener((obs, oldV, newV)->{
-            if(newV != null){
-                numberOfCenterColumns.unbind();
-                numberOfCenterColumns.bind(newV.numberOfColumns());
+        bindWidth(centerPane, viewModel.centerWidthProperty());
+        bindHeight(centerPane, viewModel.centerHeightProperty());
 
-                numberOfCenterRows.unbind();
-                numberOfCenterRows.bind(newV.numberOfRows());
-            }
-        });
+        bindWidth(leftNumberPane, viewModel.overviewWidth());
+        bindHeight(leftNumberPane, viewModel.centerHeightProperty());
 
+        bindWidth(overviewPane, viewModel.overviewWidth());
+        bindHeight(overviewPane, viewModel.overviewHeight());
 
-        final IntegerProperty numberOfLeftColumns = viewModel.getLeftNumberGridModel().numberOfColumns();
-        final NumberBinding numberOfColumns = numberOfCenterColumns.add(numberOfLeftColumns);
-        final DoubleBinding widthOfEveryColumn = rootPane.widthProperty().subtract(anchorMargin * 4).divide(numberOfColumns);
-
-        final IntegerProperty numberOfTopRows = viewModel.getTopNumberGridModel().numberOfRows();
-        final NumberBinding numberOfRows = numberOfCenterColumns.add(numberOfTopRows);
-        final DoubleBinding heightOfEveryRow = rootPane.heightProperty().subtract(anchorMargin * 4).divide(numberOfRows);
-
-
-        bindWidth(centerPane, widthOfEveryColumn.multiply(numberOfCenterColumns));
-        bindHeight(centerPane, heightOfEveryRow.multiply(numberOfCenterRows));
-
-        bindWidth(leftNumberPane, widthOfEveryColumn.multiply(numberOfLeftColumns));
-        bindHeight(leftNumberPane, heightOfEveryRow.multiply(numberOfCenterRows));
-
-        bindWidth(overviewPane, widthOfEveryColumn.multiply(numberOfLeftColumns));
-        bindHeight(overviewPane, heightOfEveryRow.multiply(numberOfTopRows));
-
-        bindWidth(topNumberPane, widthOfEveryColumn.multiply(numberOfCenterColumns));
-        bindHeight(topNumberPane, heightOfEveryRow.multiply(numberOfTopRows));
+        bindWidth(topNumberPane, viewModel.centerWidthProperty());
+        bindHeight(topNumberPane, viewModel.overviewHeight());
 
 
         AnchorPane.setTopAnchor(overviewPane, anchorMargin);
