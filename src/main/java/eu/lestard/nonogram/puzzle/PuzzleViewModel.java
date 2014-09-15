@@ -95,6 +95,9 @@ public class PuzzleViewModel implements ViewModel {
         leftNumberGridModel.setNumberOfColumns((int)Math.ceil(puzzle.getSize() / 2.0));
         leftNumberGridModel.setNumberOfRows(puzzle.getSize());
 
+
+
+
         for(int i=0 ; i<puzzle.getSize() ; i++){
 
             final List<Integer> rowNumbers = puzzle.getRowNumbers(i);

@@ -1,12 +1,10 @@
 package eu.lestard.nonogram.core;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
+import static eu.lestard.assertj.javafx.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
-
-import  static eu.lestard.assertj.javafx.api.Assertions.assertThat;
 
 public class GameInstanceTest {
 
@@ -30,7 +28,6 @@ public class GameInstanceTest {
         gameInstance = new GameInstance(puzzle);
     }
 
-    @Ignore
     @Test
     public void testFinishedColumnsAndRows(){
 

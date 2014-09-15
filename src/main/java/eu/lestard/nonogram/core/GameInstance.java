@@ -44,10 +44,10 @@ public class GameInstance {
      */
     private ObservableList<Integer> finishedColumns = FXCollections.observableArrayList();
     private ObservableList<Integer> finishedRows = FXCollections.observableArrayList();
+    private boolean isPointInPuzzle;
 
 
-
-    public GameInstance(Puzzle puzzle){
+    public GameInstance(Puzzle puzzle) {
         this.puzzle = puzzle;
 
         gridModel.setDefaultState(State.EMPTY);
@@ -60,11 +60,11 @@ public class GameInstance {
     /**
      * Mark the given cell.
      */
-    public void mark(int column, int row){
+    public void mark(int column, int row) {
         final Cell<State> cell = gridModel.getCell(column, row);
-        if(cell.getState() == State.EMPTY){
+        if (cell.getState() == State.EMPTY) {
             cell.changeState(State.MARKED);
-        }else if(cell.getState() == State.MARKED){
+        } else if (cell.getState() == State.MARKED) {
             cell.changeState(State.EMPTY);
         }
     }
@@ -72,7 +72,7 @@ public class GameInstance {
     /**
      * Reveal the cell with the given coordinates.
      */
-    public void reveal(int column, int row){
+    public void reveal(int column, int row) {
         final Cell<State> cell = gridModel.getCell(column, row);
 
         if (cell.getState() == State.FILLED) {
@@ -86,38 +86,74 @@ public class GameInstance {
 
         if (puzzle.isPoint(cell.getColumn(), cell.getRow())) {
             cell.changeState(State.FILLED);
+
+            checkNumberBlocks(cell.getColumn(), cell.getRow());
         } else {
             errors.set(errors.get() + 1);
             cell.changeState(State.ERROR);
         }
     }
 
-    public GridModel<State> getGridModel(){
+    private void checkNumberBlocks(int column, int row) {
+        checkColumnNumberBlocks(column);
+        checkRowNumberBlocks(row);
+
+        if(finishedColumns.size() == puzzle.getSize() && finishedRows.size() == puzzle.getSize()){
+            win.set(true);
+        }
+    }
+
+    private void checkRowNumberBlocks(int row){
+        for (int i = 0; i < puzzle.getSize(); i++) {
+            final boolean isRevealed = gridModel.getCell(i, row).getState() == State.FILLED;
+            isPointInPuzzle = puzzle.isPoint(i, row);
+
+            if (isRevealed != isPointInPuzzle) {
+                return;
+            }
+        }
+
+        finishedRows.add(row);
+    }
+
+    private void checkColumnNumberBlocks(int column){
+        for (int i = 0; i < puzzle.getSize(); i++) {
+            final boolean isRevealed = gridModel.getCell(column, i).getState() == State.FILLED;
+            isPointInPuzzle = puzzle.isPoint(column, i);
+
+            if (isRevealed != isPointInPuzzle) {
+                return;
+            }
+        }
+
+        finishedColumns.add(column);
+    }
+
+    public GridModel<State> getGridModel() {
         return gridModel;
     }
 
-    public ObservableList<Integer> finishedColumnsList(){
+    public ObservableList<Integer> finishedColumnsList() {
         return FXCollections.unmodifiableObservableList(finishedColumns);
     }
 
-    public ObservableList<Integer> finishedRowsList(){
+    public ObservableList<Integer> finishedRowsList() {
         return FXCollections.unmodifiableObservableList(finishedRows);
     }
 
-
-    public ReadOnlyIntegerProperty errors(){
+    public ReadOnlyIntegerProperty errors() {
         return errors.getReadOnlyProperty();
     }
 
-    public ReadOnlyIntegerProperty maxErrors(){
+    public ReadOnlyIntegerProperty maxErrors() {
         return maxErrors.getReadOnlyProperty();
     }
 
-    public ReadOnlyBooleanProperty gameOver(){
+    public ReadOnlyBooleanProperty gameOver() {
         return gameOver.getReadOnlyProperty();
     }
 
-    public ReadOnlyBooleanProperty win(){
+    public ReadOnlyBooleanProperty win() {
         return win.getReadOnlyProperty();
     }
 }
