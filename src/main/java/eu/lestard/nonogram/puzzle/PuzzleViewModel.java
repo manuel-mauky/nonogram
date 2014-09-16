@@ -6,10 +6,13 @@ import eu.lestard.grid.GridModel;
 import eu.lestard.nonogram.core.GameInstance;
 import eu.lestard.nonogram.core.Puzzle;
 import eu.lestard.nonogram.core.State;
+import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.binding.NumberBinding;
 import javafx.beans.property.*;
 import javafx.beans.value.ObservableNumberValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.input.MouseButton;
 
 import java.util.List;
@@ -39,12 +42,17 @@ public class PuzzleViewModel implements ViewModel {
     private DoubleProperty rootWidth = new SimpleDoubleProperty();
     private DoubleProperty rootHeight = new SimpleDoubleProperty();
 
+
+    private ObservableList<Integer> finishedColumns = FXCollections.observableArrayList();
+    private ObservableList<Integer> finishedRows = FXCollections.observableArrayList();
+
     public PuzzleViewModel(){
         topNumberGridModel = new GridModel<>();
         topNumberGridModel.setDefaultState(0);
 
         leftNumberGridModel = new GridModel<>();
         leftNumberGridModel.setDefaultState(0);
+
     }
 
     public void init(Puzzle puzzle, GameInstance gameInstance){
@@ -137,6 +145,9 @@ public class PuzzleViewModel implements ViewModel {
 
         overviewWidth.bind(widthOfEveryColumn.multiply(numberOfLeftColumns));
         overviewHeight.bind(heightOfEveryRow.multiply(numberOfTopRows));
+
+        Bindings.bindContent(finishedRows, gameInstance.finishedRowsList());
+        Bindings.bindContent(finishedColumns, gameInstance.finishedColumnsList());
     }
 
     private void onPrimaryDown(Puzzle puzzle, Cell<State> cell) {
@@ -203,4 +214,13 @@ public class PuzzleViewModel implements ViewModel {
     public DoubleProperty rootHeightProperty(){
         return rootHeight;
     }
+
+    public ObservableList<Integer> finishedColumns(){
+        return finishedColumns;
+    }
+
+    public ObservableList<Integer> finishedRows(){
+        return finishedRows;
+    }
+
 }

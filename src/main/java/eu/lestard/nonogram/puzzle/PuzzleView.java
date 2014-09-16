@@ -2,9 +2,12 @@ package eu.lestard.nonogram.puzzle;
 
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
+import eu.lestard.grid.Cell;
 import eu.lestard.grid.GridView;
 import eu.lestard.nonogram.core.State;
 import javafx.beans.value.ObservableDoubleValue;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -12,6 +15,9 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+
+import java.util.List;
+import java.util.function.Function;
 
 public class PuzzleView implements FxmlView<PuzzleViewModel> {
 
@@ -61,6 +67,7 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
         viewModel.maxErrorsProperty().addListener(observable -> updateErrorsBox());
 
         updateErrorsBox();
+
     }
 
     private void initOverviewGrid() {
@@ -83,7 +90,19 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
         initNumberGridMapping(leftNumberGridView);
 
         initAnchor(leftNumberGridView);
+        initFinishedStyleBinding(viewModel.finishedRows(), leftNumberGridView, viewModel.getLeftNumberGridModel()::getCellsOfRow);
     }
+
+    private void initTopNumberGrid() {
+        GridView<Integer> topNumberGridView = new GridView<>();
+        topNumberGridView.setGridModel(viewModel.getTopNumberGridModel());
+        topNumberPane.getChildren().add(topNumberGridView);
+
+        initNumberGridMapping(topNumberGridView);
+        initAnchor(topNumberGridView);
+        initFinishedStyleBinding(viewModel.finishedColumns(), topNumberGridView, viewModel.getTopNumberGridModel()::getCellsOfColumn);
+    }
+
 
     private void initNumberGridMapping(GridView<Integer> gridView){
         viewModel.sizeProperty().addListener((obs,oldV, newV) ->{
@@ -94,14 +113,22 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
         });
     }
 
-    private void initTopNumberGrid() {
-        GridView<Integer> topNumberGridView = new GridView<>();
-        topNumberGridView.setGridModel(viewModel.getTopNumberGridModel());
-        topNumberPane.getChildren().add(topNumberGridView);
 
-        initNumberGridMapping(topNumberGridView);
-        initAnchor(topNumberGridView);
+    private void initFinishedStyleBinding(ObservableList<Integer> finishedBlocks, GridView<Integer> gridView, Function<Integer, List<Cell<Integer>>> func) {
+        finishedBlocks.addListener((ListChangeListener<Integer>) c -> {
+            c.next();
+
+            c.getAddedSubList().forEach(i -> {
+                func.apply(i).forEach(cell -> {
+                    final Pane cellPane = gridView.getCellPane(cell);
+                    cellPane.getChildren().forEach(child -> {
+                        child.setStyle("-fx-font-weight:bold");
+                    });
+                });
+            });
+        });
     }
+
 
     private void initCenterGrid() {
         GridView<State> centerGridView = new GridView<>();

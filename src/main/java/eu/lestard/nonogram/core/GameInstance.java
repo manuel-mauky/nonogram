@@ -134,11 +134,11 @@ public class GameInstance {
     }
 
     public ObservableList<Integer> finishedColumnsList() {
-        return FXCollections.unmodifiableObservableList(finishedColumns);
+        return finishedColumns;
     }
 
     public ObservableList<Integer> finishedRowsList() {
-        return FXCollections.unmodifiableObservableList(finishedRows);
+        return finishedRows;
     }
 
     public ReadOnlyIntegerProperty errors() {
