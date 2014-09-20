@@ -25,7 +25,8 @@ public class Launcher extends Application {
         final ViewTuple<PuzzleView, PuzzleViewModel> viewTuple = FluentViewLoader.fxmlView(PuzzleView.class).load();
 
 
-        Puzzle puzzle = createRandomPuzzle(10);
+        Puzzle puzzle = createRandomPuzzle(20);
+
 
         viewTuple.getViewModel().init(puzzle, new GameInstance(puzzle));
 

@@ -21,6 +21,8 @@ import java.util.function.Function;
 
 public class PuzzleView implements FxmlView<PuzzleViewModel> {
 
+    private static final int GUIDELINES = 5;
+
     @FXML
     private AnchorPane centerPane;
 
@@ -133,6 +135,10 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
     private void initCenterGrid() {
         GridView<State> centerGridView = new GridView<>();
         centerGridView.setGridModel(viewModel.centerGridModelProperty().get());
+
+        centerGridView.majorGuidelineUnitProperty().setValue(GUIDELINES);
+        centerGridView.majorGuidelineStrokeWidth().set(1);
+        centerGridView.majorGuidelineColorProperty().set(Color.DIMGREY);
 
         centerGridView.addColorMapping(State.EMPTY, Color.WHITE);
 
