@@ -89,6 +89,13 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
         leftNumberGridView.setGridModel(viewModel.getLeftNumberGridModel());
         leftNumberPane.getChildren().add(leftNumberGridView);
 
+
+
+        leftNumberGridView.horizontalGuidelineUnitProperty().setValue(GUIDELINES);
+        leftNumberGridView.guidelineStrokeWidth().set(1);
+        leftNumberGridView.guidelineColorProperty().set(Color.DIMGREY);
+
+
         initNumberGridMapping(leftNumberGridView);
 
         initAnchor(leftNumberGridView);
@@ -99,6 +106,11 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
         GridView<Integer> topNumberGridView = new GridView<>();
         topNumberGridView.setGridModel(viewModel.getTopNumberGridModel());
         topNumberPane.getChildren().add(topNumberGridView);
+
+
+        topNumberGridView.verticalGuidelineUnitProperty().setValue(GUIDELINES);
+        topNumberGridView.guidelineStrokeWidth().set(1);
+        topNumberGridView.guidelineColorProperty().set(Color.DIMGREY);
 
         initNumberGridMapping(topNumberGridView);
         initAnchor(topNumberGridView);
@@ -136,9 +148,10 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
         GridView<State> centerGridView = new GridView<>();
         centerGridView.setGridModel(viewModel.centerGridModelProperty().get());
 
-        centerGridView.majorGuidelineUnitProperty().setValue(GUIDELINES);
-        centerGridView.majorGuidelineStrokeWidth().set(1);
-        centerGridView.majorGuidelineColorProperty().set(Color.DIMGREY);
+        centerGridView.horizontalGuidelineUnitProperty().setValue(GUIDELINES);
+        centerGridView.verticalGuidelineUnitProperty().setValue(GUIDELINES);
+        centerGridView.guidelineStrokeWidth().set(1);
+        centerGridView.guidelineColorProperty().set(Color.DIMGREY);
 
         centerGridView.addColorMapping(State.EMPTY, Color.WHITE);
 
