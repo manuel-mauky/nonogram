@@ -120,11 +120,33 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
 
     private void initNumberGridMapping(GridView<Integer> gridView){
         viewModel.sizeProperty().addListener((obs,oldV, newV) ->{
+            int fontSize = calculateFontSize(newV.intValue());
             for(int i=1 ; i<=newV.intValue() ; i++){
                 final String labelText = Integer.toString(i);
-                gridView.addNodeMapping(i, cell-> new Label(labelText));
+                gridView.addNodeMapping(i, cell-> {
+                    final Label label = new Label(labelText);
+                    label.setStyle("-fx-font-size:" + fontSize);
+                    return label;
+                });
             }
+
         });
+    }
+
+    private int calculateFontSize(int size){
+        if(size <=10){
+            return 20;
+        }
+
+        if(size <= 15){
+            return 13;
+        }
+
+        if(size <= 20){
+            return 11;
+        }
+
+        return 9;
     }
 
 
@@ -136,7 +158,7 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
                 func.apply(i).forEach(cell -> {
                     final Pane cellPane = gridView.getCellPane(cell);
                     cellPane.getChildren().forEach(child -> {
-                        child.setStyle("-fx-font-weight:bold");
+                        child.setStyle(child.getStyle() + ";-fx-font-weight:bold");
                     });
                 });
             });

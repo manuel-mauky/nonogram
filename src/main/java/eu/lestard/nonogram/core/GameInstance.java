@@ -79,6 +79,10 @@ public class GameInstance {
             return;
         }
 
+        if(cell.getState() == State.ERROR){
+            return;
+        }
+
         if (cell.getState() == State.MARKED) {
             cell.changeState(State.EMPTY);
             return;
