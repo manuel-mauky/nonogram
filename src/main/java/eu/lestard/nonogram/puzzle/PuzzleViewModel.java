@@ -73,11 +73,11 @@ public class PuzzleViewModel implements ViewModel {
                 }
 
                 if (event.getButton() == MouseButton.PRIMARY) {
-                    onPrimaryDown(puzzle, cell);
+                    this.gameInstance.revealWithSingleClick(cell);
                 }
 
                 if (event.getButton() == MouseButton.SECONDARY) {
-                    onSecondaryDown(cell);
+                    this.gameInstance.markWithSingleClick(cell);
                 }
             });
 
@@ -87,11 +87,11 @@ public class PuzzleViewModel implements ViewModel {
                 }
 
                 if (event.isPrimaryButtonDown()) {
-                    onPrimaryDown(puzzle, cell);
+                    this.gameInstance.revealWithMouseOver(cell);
                 }
 
                 if (event.isSecondaryButtonDown()) {
-                    onSecondaryDown(cell);
+                    this.gameInstance.markWithMouseOver(cell);
                 }
             });
         });
@@ -148,14 +148,6 @@ public class PuzzleViewModel implements ViewModel {
 
         Bindings.bindContent(finishedRows, gameInstance.finishedRowsList());
         Bindings.bindContent(finishedColumns, gameInstance.finishedColumnsList());
-    }
-
-    private void onPrimaryDown(Puzzle puzzle, Cell<State> cell) {
-        gameInstance.reveal(cell.getColumn(), cell.getRow());
-    }
-
-    private void onSecondaryDown(Cell<State> cell) {
-        gameInstance.mark(cell.getColumn(), cell.getRow());
     }
 
     public ReadOnlyObjectProperty<GridModel<State>> centerGridModelProperty(){

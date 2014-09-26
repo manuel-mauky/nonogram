@@ -58,10 +58,9 @@ public class GameInstance {
     }
 
     /**
-     * Mark the given cell.
+     * Mark the given cell with a single click.
      */
-    public void mark(int column, int row) {
-        final Cell<State> cell = gridModel.getCell(column, row);
+    public void markWithSingleClick(Cell<State> cell) {
         if (cell.getState() == State.EMPTY) {
             cell.changeState(State.MARKED);
         } else if (cell.getState() == State.MARKED) {
@@ -70,11 +69,25 @@ public class GameInstance {
     }
 
     /**
-     * Reveal the cell with the given coordinates.
+     * Mark the cell with mouse over.
      */
-    public void reveal(int column, int row) {
-        final Cell<State> cell = gridModel.getCell(column, row);
+    public void markWithMouseOver(Cell<State> cell){
+        if(cell.getState() == State.EMPTY){
+            cell.changeState(State.MARKED);
+        }
+    }
 
+    /**
+     * Reveal the cell with the given coordinates.
+     *
+     * This method is used when a single cell was clicked.
+     * When the user moves the mouse over multiple cells with
+     * a pressed mouse button, other rule apply on what happens
+     * with the underlying cell state.
+     * <br>
+     * This is done by {@link #revealWithMouseOver(eu.lestard.grid.Cell)}.
+     */
+    public void revealWithSingleClick(Cell<State> cell) {
         if (cell.getState() == State.FILLED) {
             return;
         }
@@ -95,6 +108,40 @@ public class GameInstance {
         } else {
             errors.set(errors.get() + 1);
             cell.changeState(State.ERROR);
+        }
+    }
+
+    /**
+     * Reveal the cell with the given coordinates.
+     *
+     * This method is used when the user moves with pressed mousebutton
+     * over the cells.
+     * <br>
+     * When clicks on a single cell then
+     * {@link #revealWithSingleClick(eu.lestard.grid.Cell)} is used.
+     */
+    public void revealWithMouseOver(Cell<State> cell){
+        if(cell.getState() == State.FILLED){
+            return;
+        }
+
+        if(cell.getState() == State.ERROR){
+            return;
+        }
+
+        if(cell.getState() == State.MARKED){
+            return;
+        }
+
+        if(cell.getState() == State.EMPTY){
+            if(puzzle.isPoint(cell.getColumn(), cell.getRow())){
+                cell.changeState(State.FILLED);
+
+                checkNumberBlocks(cell.getColumn(),cell.getRow());
+            }else{
+                errors.set(errors.get() + 1);
+                cell.changeState(State.ERROR);
+            }
         }
     }
 

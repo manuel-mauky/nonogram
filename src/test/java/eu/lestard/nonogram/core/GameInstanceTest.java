@@ -1,5 +1,6 @@
 package eu.lestard.nonogram.core;
 
+import eu.lestard.grid.Cell;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -36,27 +37,31 @@ public class GameInstanceTest {
 
         assertThat(gameInstance.win()).isFalse();
 
-        gameInstance.mark(1, 0);
-        gameInstance.mark(2, 0);
-        gameInstance.reveal(0, 0);
+        gameInstance.markWithSingleClick(cell(1, 0));
+        gameInstance.markWithSingleClick(cell(2, 0));
+        gameInstance.revealWithSingleClick(cell(0, 0));
 
         assertThat(gameInstance.finishedColumnsList()).isEmpty();
         assertThat(gameInstance.finishedRowsList()).containsOnly(0);
         assertThat(gameInstance.win()).isFalse();
 
 
-        gameInstance.mark(0,1);
-        gameInstance.reveal(1,1);
-        gameInstance.reveal(2, 1);
+        gameInstance.markWithSingleClick(cell(0, 1));
+        gameInstance.revealWithSingleClick(cell(1, 1));
+        gameInstance.revealWithSingleClick(cell(2, 1));
         assertThat(gameInstance.finishedColumnsList()).containsOnly(1,2);
         assertThat(gameInstance.finishedRowsList()).containsOnly(0, 1);
         assertThat(gameInstance.win()).isFalse();
 
-        gameInstance.reveal(0, 2);
+        gameInstance.revealWithSingleClick(cell(0, 2));
         assertThat(gameInstance.finishedColumnsList()).containsOnly(0, 1, 2);
         assertThat(gameInstance.finishedRowsList()).containsOnly(0, 1, 2);
         assertThat(gameInstance.win()).isTrue();
 
+    }
+
+    private Cell<State> cell(int column, int row){
+        return gameInstance.getGridModel().getCell(column,row);
     }
 }
 
