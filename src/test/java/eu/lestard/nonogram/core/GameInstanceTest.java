@@ -31,6 +31,21 @@ public class GameInstanceTest {
     }
 
     @Test
+    public void testGameOver(){
+        assertThat(gameInstance.gameOver()).isFalse();
+
+        gameInstance.revealWithSingleClick(cell(1,0));
+        gameInstance.revealWithSingleClick(cell(2,0));
+        gameInstance.revealWithSingleClick(cell(0,1));
+        gameInstance.revealWithSingleClick(cell(1,2));
+
+        assertThat(gameInstance.gameOver()).isFalse();
+        gameInstance.revealWithSingleClick(cell(2,2));
+        assertThat(gameInstance.gameOver()).isTrue();
+    }
+
+
+    @Test
     public void testFinishedColumnsAndRows(){
 
         assertThat(gameInstance.finishedColumnsList()).isEmpty();

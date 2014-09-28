@@ -5,6 +5,7 @@ import de.saxsys.mvvmfx.InjectViewModel;
 import eu.lestard.grid.Cell;
 import eu.lestard.grid.GridView;
 import eu.lestard.nonogram.core.State;
+import javafx.application.Platform;
 import javafx.beans.value.ObservableDoubleValue;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -15,6 +16,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import org.controlsfx.dialog.Dialogs;
 
 import java.util.List;
 import java.util.function.Function;
@@ -45,6 +47,9 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
     private PuzzleViewModel viewModel;
 
     public void initialize(){
+
+
+
         initLayout();
 
         initTopNumberGrid();
@@ -57,6 +62,26 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
         viewModel.maxErrorsProperty().addListener(observable -> updateErrorsBox());
 
         updateErrorsBox();
+
+        viewModel.gameFinishedProperty().addListener((obs, oldV, newV) -> {
+            if (newV) {
+                Platform.runLater(() -> Dialogs.create()
+                    .title("Win")
+                    .message("You have successfully finished the game!")
+                    .showInformation());
+            }
+        });
+
+        viewModel.gameOverProperty().addListener((obs,oldV, newV)->{
+            if(newV){
+                Platform.runLater(() -> Dialogs.create()
+                    .title("GameOver")
+                    .message("You have lost the game!")
+                    .showInformation());
+            }
+        });
+
+
     }
 
     private void initOverviewGrid() {
@@ -75,6 +100,8 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
         GridView<Integer> leftNumberGridView = new GridView<>();
         leftNumberGridView.setGridModel(viewModel.getLeftNumberGridModel());
         leftNumberPane.getChildren().add(leftNumberGridView);
+
+
 
         leftNumberGridView.horizontalGuidelineUnitProperty().setValue(GUIDELINES);
         leftNumberGridView.guidelineStrokeWidth().set(1);
