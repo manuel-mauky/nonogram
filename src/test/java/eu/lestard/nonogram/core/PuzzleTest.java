@@ -11,7 +11,8 @@ public class PuzzleTest {
     @Test
     public void testPuzzleGrid(){
 
-        Puzzle puzzle = new Puzzle(4);
+        Puzzle puzzle = new Puzzle();
+        puzzle.setSize(4);
 
         assertThat(puzzle.getColumnNumbers(0)).isEmpty();
         assertThat(puzzle.getColumnNumbers(1)).isEmpty();

@@ -1,8 +1,9 @@
 package eu.lestard.nonogram;
 
 import de.saxsys.mvvmfx.FluentViewLoader;
+import de.saxsys.mvvmfx.MvvmFX;
 import de.saxsys.mvvmfx.ViewTuple;
-import eu.lestard.nonogram.core.GameInstance;
+import eu.lestard.easydi.EasyDI;
 import eu.lestard.nonogram.core.Puzzle;
 import eu.lestard.nonogram.puzzle.PuzzleView;
 import eu.lestard.nonogram.puzzle.PuzzleViewModel;
@@ -20,15 +21,18 @@ public class Launcher extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        EasyDI easyDI = new EasyDI();
+        MvvmFX.setCustomDependencyInjector(type -> easyDI.getInstance(type));
+
+
+        Puzzle puzzle = easyDI.getInstance(Puzzle.class);
+
+        puzzle.setSize(10);
+
+        initRandomPuzzle(puzzle);
 
 
         final ViewTuple<PuzzleView, PuzzleViewModel> viewTuple = FluentViewLoader.fxmlView(PuzzleView.class).load();
-
-
-        Puzzle puzzle = createRandomPuzzle(20);
-
-
-        viewTuple.getViewModel().init(puzzle, new GameInstance(puzzle));
 
         primaryStage.setScene(new Scene(viewTuple.getView()));
 
@@ -38,9 +42,8 @@ public class Launcher extends Application {
     }
 
 
-    private Puzzle createRandomPuzzle(int size){
-
-        Puzzle puzzle = new Puzzle(size);
+    private void initRandomPuzzle(Puzzle puzzle){
+        int size = puzzle.getSize();
 
         Random rand = new Random();
 
@@ -50,7 +53,5 @@ public class Launcher extends Application {
 
             puzzle.addPoint(column, row);
         }
-
-        return puzzle;
     }
 }

@@ -9,6 +9,7 @@ import javafx.beans.property.ReadOnlyIntegerWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import javax.inject.Singleton;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,7 @@ import java.util.Map;
  * Represents the current "state" of the game. It can answer questions like
  * 'Which fields are already revealed?' , "Which are marked?" or "How many errors does the user made?".
  */
+@Singleton
 public class GameInstance {
 
     private static final int MAX_ERRORS = 5;

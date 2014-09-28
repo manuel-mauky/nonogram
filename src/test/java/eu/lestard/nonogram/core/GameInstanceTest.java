@@ -19,7 +19,8 @@ public class GameInstanceTest {
         //  [x][ ][ ]
         //  [ ][x][x]
         //  [x][ ][ ]
-        puzzle = new Puzzle(3);
+        puzzle = new Puzzle();
+        puzzle.setSize(3);
 
         puzzle.addPoint(0, 0);
         puzzle.addPoint(1, 1);

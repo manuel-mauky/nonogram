@@ -44,37 +44,24 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
     @InjectViewModel
     private PuzzleViewModel viewModel;
 
-
     public void initialize(){
         initLayout();
 
-        viewModel.centerGridModelProperty().addListener((obs, oldValue, newValue) -> {
-            if(newValue != null){
-                initCenterGrid();
-            }
-        });
-
         initTopNumberGrid();
-
         initLeftNumberGrid();
 
-        viewModel.overviewGridModelProperty().addListener((obs, oldValue, newValue) -> {
-            if (newValue != null) {
-                initOverviewGrid();
-            }
-        });
-
+        initCenterGrid();
+        initOverviewGrid();
 
         viewModel.currentErrorsProperty().addListener(observable-> updateErrorsBox());
         viewModel.maxErrorsProperty().addListener(observable -> updateErrorsBox());
 
         updateErrorsBox();
-
     }
 
     private void initOverviewGrid() {
         GridView<State> overviewGridView = new GridView<>();
-        overviewGridView.setGridModel(viewModel.overviewGridModelProperty().get());
+        overviewGridView.setGridModel(viewModel.getOverviewGridModel());
 
         overviewPane.getChildren().add(overviewGridView);
 
@@ -88,8 +75,6 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
         GridView<Integer> leftNumberGridView = new GridView<>();
         leftNumberGridView.setGridModel(viewModel.getLeftNumberGridModel());
         leftNumberPane.getChildren().add(leftNumberGridView);
-
-
 
         leftNumberGridView.horizontalGuidelineUnitProperty().setValue(GUIDELINES);
         leftNumberGridView.guidelineStrokeWidth().set(1);
@@ -119,18 +104,17 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
 
 
     private void initNumberGridMapping(GridView<Integer> gridView){
-        viewModel.sizeProperty().addListener((obs,oldV, newV) ->{
-            int fontSize = calculateFontSize(newV.intValue());
-            for(int i=1 ; i<=newV.intValue() ; i++){
-                final String labelText = Integer.toString(i);
-                gridView.addNodeMapping(i, cell-> {
-                    final Label label = new Label(labelText);
-                    label.setStyle("-fx-font-size:" + fontSize);
-                    return label;
-                });
-            }
+        final int size = viewModel.getSize();
 
-        });
+        int fontSize = calculateFontSize(size);
+        for(int i=1 ; i<=size ; i++){
+            final String labelText = Integer.toString(i);
+            gridView.addNodeMapping(i, cell-> {
+                final Label label = new Label(labelText);
+                label.setStyle("-fx-font-size:" + fontSize);
+                return label;
+            });
+        }
     }
 
     private int calculateFontSize(int size){
@@ -168,7 +152,7 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
 
     private void initCenterGrid() {
         GridView<State> centerGridView = new GridView<>();
-        centerGridView.setGridModel(viewModel.centerGridModelProperty().get());
+        centerGridView.setGridModel(viewModel.getCenterGridModel());
 
         centerGridView.horizontalGuidelineUnitProperty().setValue(GUIDELINES);
         centerGridView.verticalGuidelineUnitProperty().setValue(GUIDELINES);

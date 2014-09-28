@@ -19,13 +19,11 @@ import java.util.List;
 
 public class PuzzleViewModel implements ViewModel {
 
-    private ReadOnlyObjectWrapper<GridModel<State>> mainGridModel = new ReadOnlyObjectWrapper<>();
-
     private GridModel<Integer> topNumberGridModel;
     private GridModel<Integer> leftNumberGridModel;
 
-    private ReadOnlyIntegerWrapper size = new ReadOnlyIntegerWrapper();
     private GameInstance gameInstance;
+    private Puzzle puzzle;
 
     private ReadOnlyBooleanWrapper gameOver = new ReadOnlyBooleanWrapper();
 
@@ -46,25 +44,23 @@ public class PuzzleViewModel implements ViewModel {
     private ObservableList<Integer> finishedColumns = FXCollections.observableArrayList();
     private ObservableList<Integer> finishedRows = FXCollections.observableArrayList();
 
-    public PuzzleViewModel(){
+    public PuzzleViewModel(Puzzle puzzle, GameInstance gameInstance){
         topNumberGridModel = new GridModel<>();
         topNumberGridModel.setDefaultState(0);
 
         leftNumberGridModel = new GridModel<>();
         leftNumberGridModel.setDefaultState(0);
 
+        this.gameInstance = gameInstance;
+        this.puzzle = puzzle;
+        init();
     }
 
-    public void init(Puzzle puzzle, GameInstance gameInstance){
-        this.gameInstance = gameInstance;
+    void init(){
         maxErrors.set(gameInstance.maxErrors().get());
         currentErrors.bind(gameInstance.errors());
 
         gameOver.bind(gameInstance.gameOver());
-
-        mainGridModel.set(gameInstance.getGridModel());
-
-        size.set(puzzle.getSize());
 
         gameInstance.getGridModel().getCells().forEach(cell -> {
             cell.setOnClick(event -> {
@@ -127,8 +123,8 @@ public class PuzzleViewModel implements ViewModel {
         }
 
 
-        ObservableNumberValue numberOfCenterColumns = mainGridModel.get().numberOfColumns();
-        ObservableNumberValue numberOfCenterRows = mainGridModel.get().numberOfRows();
+        ObservableNumberValue numberOfCenterColumns = gameInstance.getGridModel().numberOfColumns();
+        ObservableNumberValue numberOfCenterRows = gameInstance.getGridModel().numberOfRows();
 
         final IntegerProperty numberOfLeftColumns = leftNumberGridModel.numberOfColumns();
         final NumberBinding numberOfColumns = numberOfLeftColumns.add(numberOfCenterColumns);
@@ -150,12 +146,12 @@ public class PuzzleViewModel implements ViewModel {
         Bindings.bindContent(finishedColumns, gameInstance.finishedColumnsList());
     }
 
-    public ReadOnlyObjectProperty<GridModel<State>> centerGridModelProperty(){
-        return mainGridModel.getReadOnlyProperty();
+    public GridModel<State> getCenterGridModel(){
+        return gameInstance.getGridModel();
     }
 
-    public ReadOnlyObjectProperty<GridModel<State>> overviewGridModelProperty(){
-        return mainGridModel.getReadOnlyProperty();
+    public GridModel<State> getOverviewGridModel(){
+        return gameInstance.getGridModel();
     }
 
     public GridModel<Integer> getLeftNumberGridModel(){
@@ -179,8 +175,9 @@ public class PuzzleViewModel implements ViewModel {
         return gameOver.getReadOnlyProperty();
     }
 
-    public ReadOnlyIntegerProperty sizeProperty(){
-        return size.getReadOnlyProperty();
+
+    public int getSize(){
+        return puzzle.getSize();
     }
 
     public ReadOnlyDoubleProperty centerWidthProperty(){

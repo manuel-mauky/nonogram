@@ -3,19 +3,20 @@ package eu.lestard.nonogram.core;
 import eu.lestard.grid.Cell;
 import eu.lestard.grid.GridModel;
 
+import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
 
+@Singleton
 public class Puzzle {
 
-    private final int size;
+    private int size;
 
 
     private GridModel<Boolean> gridModel = new GridModel<>();
 
-    public Puzzle(int size) {
+    public void setSize(int size){
         this.size = size;
-
         gridModel.setDefaultState(false);
 
         gridModel.setNumberOfColumns(size);

@@ -10,9 +10,8 @@ import org.junit.Test;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static eu.lestard.assertj.javafx.api.Assertions.assertThat;
-
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class PuzzleViewModelTest {
 
@@ -27,12 +26,12 @@ public class PuzzleViewModelTest {
     @Before
     public void setup() {
 
-        viewModel = new PuzzleViewModel();
 
         //        [ ][x][x]
         //        [ ][x][ ]
         //        [ ][x][x]
-        puzzle3 = new Puzzle(3);
+        puzzle3 = new Puzzle();
+        puzzle3.setSize(3);
         puzzle3.addPoint(1, 0);
         puzzle3.addPoint(2, 0);
         puzzle3.addPoint(1, 1);
@@ -43,7 +42,8 @@ public class PuzzleViewModelTest {
         //        [x][x][x][ ]
         //        [ ][x][ ][ ]
         //        [x][x][ ][x]
-        puzzle4 = new Puzzle(4);
+        puzzle4 = new Puzzle();
+        puzzle4.setSize(4);
         puzzle4.addPoint(0, 1);
         puzzle4.addPoint(0, 3);
         puzzle4.addPoint(1, 0);
@@ -59,7 +59,8 @@ public class PuzzleViewModelTest {
         //        [x][x][ ][ ][ ]
         //        [ ][x][ ][x][ ]
         //        [x][x][ ][ ][ ]
-        puzzle5 = new Puzzle(5);
+        puzzle5 = new Puzzle();
+        puzzle5.setSize(5);
         puzzle5.addPoint(0, 0);
         puzzle5.addPoint(0, 2);
         puzzle5.addPoint(0, 4);
@@ -70,13 +71,16 @@ public class PuzzleViewModelTest {
         puzzle5.addPoint(1, 4);
         puzzle5.addPoint(4, 0);
         puzzle5.addPoint(3, 3);
+
+
     }
 
 
     @Test
     public void testNumberGridModelsForPuzzleWithSizeOf3() {
         gameInstance = new GameInstance(puzzle3);
-        viewModel.init(puzzle3, gameInstance);
+
+        viewModel = new PuzzleViewModel(puzzle3, gameInstance);
 
         final GridModel<Integer> left = viewModel.getLeftNumberGridModel();
 
@@ -100,7 +104,8 @@ public class PuzzleViewModelTest {
     @Test
     public void testNumberGridModelsForPuzzleWithSizeOf4() {
         gameInstance = new GameInstance(puzzle4);
-        viewModel.init(puzzle4, gameInstance);
+
+        viewModel = new PuzzleViewModel(puzzle4, gameInstance);
 
         final GridModel<Integer> left = viewModel.getLeftNumberGridModel();
 
@@ -127,7 +132,8 @@ public class PuzzleViewModelTest {
     @Test
     public void testNumberGridModelsForPuzzleWithSizeOf5() {
         gameInstance = new GameInstance(puzzle5);
-        viewModel.init(puzzle5, gameInstance);
+
+        viewModel = new PuzzleViewModel(puzzle5, gameInstance);
 
         final GridModel<Integer> left = viewModel.getLeftNumberGridModel();
         assertThat(left.getNumberOfColumns()).isEqualTo(3);
@@ -155,7 +161,7 @@ public class PuzzleViewModelTest {
     @Test
     public void testWidthAndHeightOfCenterAndOverviewPane(){
         gameInstance = new GameInstance(puzzle3);
-        viewModel.init(puzzle3, gameInstance);
+        viewModel = new PuzzleViewModel(puzzle3, gameInstance);
 
         viewModel.rootHeightProperty().set(100);
         viewModel.rootWidthProperty().set(100);
