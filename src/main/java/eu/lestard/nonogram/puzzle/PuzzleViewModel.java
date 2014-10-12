@@ -25,10 +25,6 @@ public class PuzzleViewModel implements ViewModel {
     private GameInstance gameInstance;
     private Puzzle puzzle;
 
-    private ReadOnlyIntegerWrapper maxErrors = new ReadOnlyIntegerWrapper();
-    private ReadOnlyIntegerWrapper currentErrors = new ReadOnlyIntegerWrapper(0);
-
-
     private ReadOnlyDoubleWrapper centerWidth = new ReadOnlyDoubleWrapper();
     private ReadOnlyDoubleWrapper centerHeight = new ReadOnlyDoubleWrapper();
     private ReadOnlyDoubleWrapper overviewWidth = new ReadOnlyDoubleWrapper();
@@ -55,9 +51,6 @@ public class PuzzleViewModel implements ViewModel {
     }
 
     void init(){
-        maxErrors.set(gameInstance.maxErrors().get());
-        currentErrors.bind(gameInstance.errors());
-
         gameInstance.getGridModel().getCells().forEach(cell -> {
             cell.setOnClick(event -> {
                 if (gameInstance.gameOver().get()) {
@@ -156,15 +149,6 @@ public class PuzzleViewModel implements ViewModel {
 
     public GridModel<Integer> getTopNumberGridModel(){
         return topNumberGridModel;
-    }
-
-
-    public ReadOnlyIntegerProperty maxErrorsProperty(){
-        return maxErrors.getReadOnlyProperty();
-    }
-
-    public ReadOnlyIntegerProperty currentErrorsProperty(){
-        return currentErrors.getReadOnlyProperty();
     }
 
     public ReadOnlyBooleanProperty gameOverProperty(){

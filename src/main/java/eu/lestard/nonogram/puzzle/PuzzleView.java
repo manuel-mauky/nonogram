@@ -13,7 +13,6 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import org.controlsfx.dialog.Dialogs;
@@ -40,16 +39,11 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
     @FXML
     private AnchorPane rootPane;
 
-    @FXML
-    private HBox errorsBox;
 
     @InjectViewModel
     private PuzzleViewModel viewModel;
 
     public void initialize(){
-
-
-
         initLayout();
 
         initTopNumberGrid();
@@ -57,11 +51,6 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
 
         initCenterGrid();
         initOverviewGrid();
-
-        viewModel.currentErrorsProperty().addListener(observable-> updateErrorsBox());
-        viewModel.maxErrorsProperty().addListener(observable -> updateErrorsBox());
-
-        updateErrorsBox();
 
         viewModel.gameFinishedProperty().addListener((obs, oldV, newV) -> {
             if (newV) {
@@ -249,23 +238,5 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
     private void bindHeight(Pane pane, ObservableDoubleValue height){
         pane.minHeightProperty().bind(height);
         pane.maxHeightProperty().bind(height);
-    }
-
-    private void updateErrorsBox(){
-        errorsBox.getChildren().clear();
-
-        final int currentErrors = viewModel.currentErrorsProperty().get();
-
-        for (int i=0 ; i<currentErrors ; i++){
-            errorsBox.getChildren().add(new ErrorBox(true));
-        }
-
-
-        final int maxErrors = viewModel.maxErrorsProperty().get();
-
-        for (int i = 0; i < (maxErrors - currentErrors); i++) {
-            errorsBox.getChildren().add(new ErrorBox(false));
-        }
-
     }
 }

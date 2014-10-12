@@ -5,8 +5,8 @@ import de.saxsys.mvvmfx.MvvmFX;
 import de.saxsys.mvvmfx.ViewTuple;
 import eu.lestard.easydi.EasyDI;
 import eu.lestard.nonogram.core.Puzzle;
-import eu.lestard.nonogram.puzzle.PuzzleView;
-import eu.lestard.nonogram.puzzle.PuzzleViewModel;
+import eu.lestard.nonogram.main.MainView;
+import eu.lestard.nonogram.main.MainViewModel;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -31,8 +31,7 @@ public class Launcher extends Application {
 
         initRandomPuzzle(puzzle);
 
-
-        final ViewTuple<PuzzleView, PuzzleViewModel> viewTuple = FluentViewLoader.fxmlView(PuzzleView.class).load();
+        final ViewTuple<MainView, MainViewModel> viewTuple = FluentViewLoader.fxmlView(MainView.class).load();
 
         primaryStage.setScene(new Scene(viewTuple.getView()));
 

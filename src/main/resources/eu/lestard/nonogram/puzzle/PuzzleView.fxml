@@ -1,31 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import java.lang.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.*?>
-
-<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.lestard.nonogram.puzzle.PuzzleView">
-   <center>
-
-    <AnchorPane fx:id="rootPane" prefHeight="600.0" prefWidth="600.0">
-         <children>
-              <AnchorPane fx:id="overviewPane" style="-fx-background-color: white;">
-               <padding>
-                  <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
-               </padding></AnchorPane>
-              <AnchorPane fx:id="topNumberPane" />
-              <AnchorPane fx:id="leftNumberPane" />
-              <AnchorPane fx:id="centerPane" />
-         </children>
-    </AnchorPane>
-
-   </center>
-   <top>
-      <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-        <items>
-            <HBox fx:id="errorsBox" spacing="2.0" />
-        </items>
-      </ToolBar>
-   </top>
-</BorderPane>
+<AnchorPane fx:id="rootPane" prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="eu.lestard.nonogram.puzzle.PuzzleView">
+    <children>
+        <AnchorPane fx:id="overviewPane" style="-fx-background-color: white;">
+            <padding>
+                <Insets bottom="15.0" left="15.0" right="15.0" top="15.0"/>
+            </padding>
+        </AnchorPane>
+        <AnchorPane fx:id="topNumberPane"/>
+        <AnchorPane fx:id="leftNumberPane"/>
+        <AnchorPane fx:id="centerPane"/>
+    </children>
+</AnchorPane>

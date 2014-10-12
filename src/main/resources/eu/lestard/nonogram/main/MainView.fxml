@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<BorderPane fx:controller="eu.lestard.nonogram.main.MainView" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <top>
+      <ToolBar prefHeight="40.0" BorderPane.alignment="CENTER">
+         <items>
+             <HBox fx:id="errorsBox" spacing="2.0" />
+         </items>
+      </ToolBar>
+   </top>
+    <center>
+        <fx:include source="../puzzle/PuzzleView.fxml"/>
+    </center>
+</BorderPane>
