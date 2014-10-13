@@ -33,9 +33,7 @@ public class Launcher extends Application {
 
         final ViewTuple<MainView, MainViewModel> viewTuple = FluentViewLoader.fxmlView(MainView.class).load();
 
-        primaryStage.setScene(new Scene(viewTuple.getView()));
-
-        primaryStage.setResizable(false);
+        primaryStage.setScene(new Scene(viewTuple.getView(), 600, 600));
 
         primaryStage.show();
     }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 
+<?import eu.lestard.nonogram.util.SquareContainer?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
@@ -13,6 +14,10 @@
       </ToolBar>
    </top>
     <center>
-        <fx:include source="../puzzle/PuzzleView.fxml"/>
+        <SquareContainer>
+            <content>
+                <fx:include source="../puzzle/PuzzleView.fxml"/>
+            </content>
+        </SquareContainer>
     </center>
 </BorderPane>
