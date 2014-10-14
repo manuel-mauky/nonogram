@@ -6,10 +6,12 @@ import eu.lestard.grid.Cell;
 import eu.lestard.grid.GridView;
 import eu.lestard.nonogram.core.State;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.beans.value.ObservableDoubleValue;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
@@ -43,7 +45,7 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
     @InjectViewModel
     private PuzzleViewModel viewModel;
 
-    public void initialize(){
+    public void initialize() {
         initLayout();
 
         initTopNumberGrid();
@@ -61,8 +63,8 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
             }
         });
 
-        viewModel.gameOverProperty().addListener((obs,oldV, newV)->{
-            if(newV){
+        viewModel.gameOverProperty().addListener((obs, oldV, newV) -> {
+            if (newV) {
                 Platform.runLater(() -> Dialogs.create()
                     .title("GameOver")
                     .message("You have lost the game!")
@@ -79,6 +81,10 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
 
         overviewPane.getChildren().add(overviewGridView);
 
+        overviewPane.paddingProperty().bind(Bindings.createObjectBinding(
+            () -> new Insets(overviewPane.getWidth() / 20),
+            overviewPane.widthProperty()));
+
         overviewGridView.addColorMapping(State.FILLED, Color.BLACK);
 
         initAnchor(overviewGridView);
@@ -90,12 +96,9 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
         leftNumberGridView.setGridModel(viewModel.getLeftNumberGridModel());
         leftNumberPane.getChildren().add(leftNumberGridView);
 
-
-
         leftNumberGridView.horizontalGuidelineUnitProperty().setValue(GUIDELINES);
         leftNumberGridView.guidelineStrokeWidth().set(1);
         leftNumberGridView.guidelineColorProperty().set(Color.DIMGREY);
-
 
         initNumberGridMapping(leftNumberGridView);
 
@@ -108,7 +111,6 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
         topNumberGridView.setGridModel(viewModel.getTopNumberGridModel());
         topNumberPane.getChildren().add(topNumberGridView);
 
-
         topNumberGridView.verticalGuidelineUnitProperty().setValue(GUIDELINES);
         topNumberGridView.guidelineStrokeWidth().set(1);
         topNumberGridView.guidelineColorProperty().set(Color.DIMGREY);
@@ -119,13 +121,13 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
     }
 
 
-    private void initNumberGridMapping(GridView<Integer> gridView){
+    private void initNumberGridMapping(GridView<Integer> gridView) {
         final int size = viewModel.getSize();
 
         int fontSize = calculateFontSize(size);
-        for(int i=1 ; i<=size ; i++){
+        for (int i = 1; i <= size; i++) {
             final String labelText = Integer.toString(i);
-            gridView.addNodeMapping(i, cell-> {
+            gridView.addNodeMapping(i, cell -> {
                 final Label label = new Label(labelText);
                 label.setStyle("-fx-font-size:" + fontSize);
                 return label;
@@ -133,16 +135,16 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
         }
     }
 
-    private int calculateFontSize(int size){
-        if(size <=10){
+    private int calculateFontSize(int size) {
+        if (size <= 10) {
             return 20;
         }
 
-        if(size <= 15){
+        if (size <= 15) {
             return 13;
         }
 
-        if(size <= 20){
+        if (size <= 20) {
             return 11;
         }
 
@@ -187,13 +189,12 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
         initAnchor(centerGridView);
     }
 
-    private void initAnchor(Node node){
+    private void initAnchor(Node node) {
         AnchorPane.setBottomAnchor(node, 0.0);
         AnchorPane.setTopAnchor(node, 0.0);
         AnchorPane.setLeftAnchor(node, 0.0);
         AnchorPane.setRightAnchor(node, 0.0);
     }
-
 
 
     private void initLayout() {
@@ -216,7 +217,6 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
         bindWidth(topNumberPane, viewModel.centerWidthProperty());
         bindHeight(topNumberPane, viewModel.overviewHeight());
 
-
         AnchorPane.setTopAnchor(overviewPane, anchorMargin);
         AnchorPane.setLeftAnchor(overviewPane, anchorMargin);
 
@@ -226,16 +226,16 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
         AnchorPane.setBottomAnchor(leftNumberPane, anchorMargin);
         AnchorPane.setLeftAnchor(leftNumberPane, anchorMargin);
 
-        AnchorPane.setBottomAnchor(centerPane,anchorMargin);
-        AnchorPane.setRightAnchor(centerPane,anchorMargin);
+        AnchorPane.setBottomAnchor(centerPane, anchorMargin);
+        AnchorPane.setRightAnchor(centerPane, anchorMargin);
     }
 
-    private void bindWidth(Pane pane, ObservableDoubleValue width){
+    private void bindWidth(Pane pane, ObservableDoubleValue width) {
         pane.minWidthProperty().bind(width);
         pane.maxWidthProperty().bind(width);
     }
 
-    private void bindHeight(Pane pane, ObservableDoubleValue height){
+    private void bindHeight(Pane pane, ObservableDoubleValue height) {
         pane.minHeightProperty().bind(height);
         pane.maxHeightProperty().bind(height);
     }
