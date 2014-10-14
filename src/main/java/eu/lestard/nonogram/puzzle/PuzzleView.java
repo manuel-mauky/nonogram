@@ -7,6 +7,7 @@ import eu.lestard.grid.GridView;
 import eu.lestard.nonogram.core.State;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.DoubleBinding;
 import javafx.beans.value.ObservableDoubleValue;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -124,33 +125,20 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
     private void initNumberGridMapping(GridView<Integer> gridView) {
         final int size = viewModel.getSize();
 
-        int fontSize = calculateFontSize(size);
         for (int i = 1; i <= size; i++) {
             final String labelText = Integer.toString(i);
             gridView.addNodeMapping(i, cell -> {
                 final Label label = new Label(labelText);
-                label.setStyle("-fx-font-size:" + fontSize);
+                final DoubleBinding boundSize = Bindings.createDoubleBinding(() -> Math.max(label.getBoundsInLocal().getWidth(), label.getBoundsInLocal().getHeight()), label.boundsInLocalProperty());
+
+                final DoubleBinding scaleFactor = gridView.cellSizeProperty().divide(boundSize).divide(1.2);
+                label.scaleXProperty().bind(scaleFactor);
+                label.scaleYProperty().bind(scaleFactor);
+
                 return label;
             });
         }
     }
-
-    private int calculateFontSize(int size) {
-        if (size <= 10) {
-            return 20;
-        }
-
-        if (size <= 15) {
-            return 13;
-        }
-
-        if (size <= 20) {
-            return 11;
-        }
-
-        return 9;
-    }
-
 
     private void initFinishedStyleBinding(ObservableList<Integer> finishedBlocks, GridView<Integer> gridView, Function<Integer, List<Cell<Integer>>> func) {
         finishedBlocks.addListener((ListChangeListener<Integer>) c -> {
