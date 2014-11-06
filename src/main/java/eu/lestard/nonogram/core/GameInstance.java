@@ -9,16 +9,10 @@ import javafx.beans.property.ReadOnlyIntegerWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import javax.inject.Singleton;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 /**
  * Represents the current "state" of the game. It can answer questions like
  * 'Which fields are already revealed?' , "Which are marked?" or "How many errors does the user made?".
  */
-@Singleton
 public class GameInstance {
 
     private static final int MAX_ERRORS = 5;
@@ -28,10 +22,6 @@ public class GameInstance {
 
 
     private Puzzle puzzle;
-
-    private Map<Integer, List<Integer>> columnNumberBlocks = new HashMap<>();
-
-    private Map<Integer, List<Integer>> rowNumberBlocks = new HashMap<>();
 
     private GridModel<State> gridModel = new GridModel<>();
 
@@ -57,6 +47,10 @@ public class GameInstance {
         gridModel.setNumberOfColumns(puzzle.getSize());
         gridModel.setNumberOfRows(puzzle.getSize());
         gameOver.bind(errors.greaterThanOrEqualTo(maxErrors));
+    }
+
+    public Puzzle getPuzzle(){
+        return puzzle;
     }
 
     /**

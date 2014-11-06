@@ -3,6 +3,7 @@ package eu.lestard.nonogram.puzzle;
 import eu.lestard.grid.Cell;
 import eu.lestard.grid.GridModel;
 import eu.lestard.nonogram.core.GameInstance;
+import eu.lestard.nonogram.core.GameManager;
 import eu.lestard.nonogram.core.Puzzle;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,6 +13,7 @@ import java.util.stream.Collectors;
 
 import static eu.lestard.assertj.javafx.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
 
 public class PuzzleViewModelTest {
 
@@ -23,9 +25,13 @@ public class PuzzleViewModelTest {
 
     private GameInstance gameInstance;
 
+    private GameManager gameManagerMock;
+
     @Before
     public void setup() {
+        gameManagerMock = mock(GameManager.class);
 
+        when(gameManagerMock.newGame()).then(invocationOnMock -> gameInstance);
 
         //        [ ][x][x]
         //        [ ][x][ ]
@@ -71,16 +77,13 @@ public class PuzzleViewModelTest {
         puzzle5.addPoint(1, 4);
         puzzle5.addPoint(4, 0);
         puzzle5.addPoint(3, 3);
-
-
     }
 
 
     @Test
     public void testNumberGridModelsForPuzzleWithSizeOf3() {
         gameInstance = new GameInstance(puzzle3);
-
-        viewModel = new PuzzleViewModel(puzzle3, gameInstance);
+        viewModel = new PuzzleViewModel(gameManagerMock);
 
         final GridModel<Integer> left = viewModel.getLeftNumberGridModel();
 
@@ -104,8 +107,7 @@ public class PuzzleViewModelTest {
     @Test
     public void testNumberGridModelsForPuzzleWithSizeOf4() {
         gameInstance = new GameInstance(puzzle4);
-
-        viewModel = new PuzzleViewModel(puzzle4, gameInstance);
+        viewModel = new PuzzleViewModel(gameManagerMock);
 
         final GridModel<Integer> left = viewModel.getLeftNumberGridModel();
 
@@ -132,8 +134,7 @@ public class PuzzleViewModelTest {
     @Test
     public void testNumberGridModelsForPuzzleWithSizeOf5() {
         gameInstance = new GameInstance(puzzle5);
-
-        viewModel = new PuzzleViewModel(puzzle5, gameInstance);
+        viewModel = new PuzzleViewModel(gameManagerMock);
 
         final GridModel<Integer> left = viewModel.getLeftNumberGridModel();
         assertThat(left.getNumberOfColumns()).isEqualTo(3);
@@ -161,7 +162,7 @@ public class PuzzleViewModelTest {
     @Test
     public void testWidthAndHeightOfCenterAndOverviewPane(){
         gameInstance = new GameInstance(puzzle3);
-        viewModel = new PuzzleViewModel(puzzle3, gameInstance);
+        viewModel = new PuzzleViewModel(gameManagerMock);
 
         viewModel.rootHeightProperty().set(100);
         viewModel.rootWidthProperty().set(100);

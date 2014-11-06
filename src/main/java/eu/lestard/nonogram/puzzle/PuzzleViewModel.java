@@ -4,6 +4,7 @@ import de.saxsys.mvvmfx.ViewModel;
 import eu.lestard.grid.Cell;
 import eu.lestard.grid.GridModel;
 import eu.lestard.nonogram.core.GameInstance;
+import eu.lestard.nonogram.core.GameManager;
 import eu.lestard.nonogram.core.Puzzle;
 import eu.lestard.nonogram.core.State;
 import javafx.beans.binding.Bindings;
@@ -38,15 +39,15 @@ public class PuzzleViewModel implements ViewModel {
     private ObservableList<Integer> finishedColumns = FXCollections.observableArrayList();
     private ObservableList<Integer> finishedRows = FXCollections.observableArrayList();
 
-    public PuzzleViewModel(Puzzle puzzle, GameInstance gameInstance){
+    public PuzzleViewModel(GameManager gameManager){
         topNumberGridModel = new GridModel<>();
         topNumberGridModel.setDefaultState(0);
 
         leftNumberGridModel = new GridModel<>();
         leftNumberGridModel.setDefaultState(0);
 
-        this.gameInstance = gameInstance;
-        this.puzzle = puzzle;
+        this.gameInstance = gameManager.newGame();
+        this.puzzle = gameInstance.getPuzzle();
         init();
     }
 
