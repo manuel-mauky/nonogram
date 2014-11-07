@@ -10,9 +10,8 @@ import eu.lestard.nonogram.puzzle.PuzzleViewModel;
 import eu.lestard.nonogram.util.SquareContainer;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 
 public class MainView implements FxmlView<MainViewModel> {
 
@@ -21,7 +20,7 @@ public class MainView implements FxmlView<MainViewModel> {
     private HBox errorsBox;
 
     @FXML
-    private BorderPane borderPane;
+    private SquareContainer center;
 
     @InjectViewModel
     private MainViewModel viewModel;
@@ -40,8 +39,12 @@ public class MainView implements FxmlView<MainViewModel> {
         final ViewTuple<PuzzleView, PuzzleViewModel> viewTuple = FluentViewLoader.fxmlView(PuzzleView.class).load();
 
         final Parent view = viewTuple.getView();
-        if(view instanceof Pane){
-            borderPane.setCenter(new SquareContainer((Pane)view));
+
+        center.setMinSize(0,0);
+        center.setPrefSize(0,0);
+
+        if(view instanceof Region){
+            center.setContent((Region) view);
         }
     }
 

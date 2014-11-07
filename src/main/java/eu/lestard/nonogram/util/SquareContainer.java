@@ -1,11 +1,9 @@
 package eu.lestard.nonogram.util;
 
-import javafx.beans.NamedArg;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.NumberBinding;
-import javafx.collections.ObservableList;
-import javafx.scene.Node;
-import javafx.scene.layout.Pane;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 
@@ -13,37 +11,44 @@ public class SquareContainer extends Region {
 
     private StackPane root = new StackPane();
 
-    private Pane content;
+    private ObjectProperty<Region> content = new SimpleObjectProperty<>();
 
-    public SquareContainer(@NamedArg("content") Pane content){
-        this.content = content;
+    private final NumberBinding size = Bindings.min(this.heightProperty(), this.widthProperty());
+
+    public SquareContainer(){
         this.getChildren().add(root);
-
-        final NumberBinding size = Bindings.min(this.heightProperty(), this.widthProperty());
-
-        content.minWidthProperty().bind(size);
-        content.minHeightProperty().bind(size);
-
-        content.maxWidthProperty().bind(size);
-        content.maxHeightProperty().bind(size);
-
-
-        root.getChildren().add(content);
 
         root.prefWidthProperty().bind(this.widthProperty());
         root.prefHeightProperty().bind(this.heightProperty());
+
+        content.addListener((obs, oldContent, newContent)-> {
+            if(oldContent != null){
+                oldContent.minWidthProperty().unbind();
+                oldContent.minHeightProperty().unbind();
+
+                oldContent.maxWidthProperty().unbind();
+                oldContent.maxHeightProperty().unbind();
+
+                root.getChildren().remove(oldContent);
+            }
+
+            if(newContent != null){
+                newContent.minWidthProperty().bind(size);
+                newContent.minHeightProperty().bind(size);
+
+                newContent.maxWidthProperty().bind(size);
+                newContent.maxHeightProperty().bind(size);
+
+                root.getChildren().add(newContent);
+            }
+        });
     }
 
-    public SquareContainer(){
-        this(new Pane());
+    public void setContent(Region content){
+        this.content.set(content);
     }
 
-    public Pane getContent(){
-        return content;
-    }
-
-    @Override
-    public ObservableList<Node> getChildrenUnmodifiable() {
-        return content.getChildrenUnmodifiable();
+    public Region getContent(){
+        return content.get();
     }
 }

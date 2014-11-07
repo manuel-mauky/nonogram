@@ -15,4 +15,7 @@
          </items>
       </ToolBar>
    </top>
+    <center>
+        <SquareContainer fx:id="center" />
+    </center>
 </BorderPane>
