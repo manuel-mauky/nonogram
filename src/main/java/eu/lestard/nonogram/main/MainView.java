@@ -10,8 +10,11 @@ import eu.lestard.nonogram.puzzle.PuzzleViewModel;
 import eu.lestard.nonogram.util.SquareContainer;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
+import javafx.scene.control.ChoiceDialog;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
+
+import java.util.Optional;
 
 public class MainView implements FxmlView<MainViewModel> {
 
@@ -36,16 +39,28 @@ public class MainView implements FxmlView<MainViewModel> {
 
     @FXML
     public void newGame(){
-        final ViewTuple<PuzzleView, PuzzleViewModel> viewTuple = FluentViewLoader.fxmlView(PuzzleView.class).load();
+        ChoiceDialog<Integer> dialog = new ChoiceDialog<>(viewModel.sizeProperty().get(), viewModel.getSizeOptions());
+        dialog.setTitle("New Game");
+        dialog.setHeaderText("Start a new Game");
+        dialog.setContentText("Choose the size:");
 
-        final Parent view = viewTuple.getView();
+        Optional<Integer> result = dialog.showAndWait();
+        result.ifPresent(size->{
+            viewModel.sizeProperty().set(size);
 
-        center.setMinSize(0,0);
-        center.setPrefSize(0,0);
+            final ViewTuple<PuzzleView, PuzzleViewModel> viewTuple = FluentViewLoader.fxmlView(PuzzleView.class).load();
 
-        if(view instanceof Region){
-            center.setContent((Region) view);
-        }
+            final Parent view = viewTuple.getView();
+
+            center.setMinSize(0,0);
+            center.setPrefSize(0,0);
+
+            if(view instanceof Region){
+                center.setContent((Region) view);
+            }
+        });
+
+
     }
 
     private void updateErrorsBox(){

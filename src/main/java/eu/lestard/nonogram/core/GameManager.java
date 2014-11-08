@@ -6,11 +6,11 @@ import java.util.Random;
 @Singleton
 public class GameManager {
 
+    private int size = 10;
 
-    public GameInstance newGame(int size){
-
+    public GameInstance newGame(){
         Puzzle puzzle = new Puzzle();
-        puzzle.setSize(10);
+        puzzle.setSize(size);
 
         initRandomPuzzle(puzzle);
 
@@ -19,10 +19,10 @@ public class GameManager {
         return gameInstance;
     }
 
-    public GameInstance newGame(){
-        return newGame(10);
+    public void setSize(int size){
+        System.out.println("setSize(" + size + ")");
+        this.size = size;
     }
-
 
     private void initRandomPuzzle(Puzzle puzzle){
         int size = puzzle.getSize();
