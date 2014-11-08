@@ -5,6 +5,7 @@ import eu.lestard.grid.GridModel;
 import eu.lestard.nonogram.core.GameInstance;
 import eu.lestard.nonogram.core.GameManager;
 import eu.lestard.nonogram.core.Puzzle;
+import javafx.beans.property.SimpleObjectProperty;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -31,7 +32,7 @@ public class PuzzleViewModelTest {
     public void setup() {
         gameManagerMock = mock(GameManager.class);
 
-        when(gameManagerMock.newGame()).then(invocationOnMock -> gameInstance);
+        when(gameManagerMock.gameInstanceProperty()).then(invocationOnMock -> new SimpleObjectProperty<GameInstance>(gameInstance));
 
         //        [ ][x][x]
         //        [ ][x][ ]

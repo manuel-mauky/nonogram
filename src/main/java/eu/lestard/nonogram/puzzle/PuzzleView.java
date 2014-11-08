@@ -5,6 +5,7 @@ import de.saxsys.mvvmfx.InjectViewModel;
 import eu.lestard.grid.Cell;
 import eu.lestard.grid.GridView;
 import eu.lestard.nonogram.core.State;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.value.ObservableDoubleValue;
@@ -56,20 +57,24 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
 
         viewModel.gameFinishedProperty().addListener((obs, oldV, newV) -> {
             if (newV) {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Win");
-                alert.setHeaderText("You have successfully finished the game!");
-                alert.setContentText(null);
-                alert.showAndWait();
+                Platform.runLater(()->{
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Win");
+                    alert.setHeaderText("You have successfully finished the game!");
+                    alert.setContentText(null);
+                    alert.showAndWait();
+                });
             }
         });
 
         viewModel.gameOverProperty().addListener((obs, oldV, newV) -> {
             if (newV) {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("GameOver");
-                alert.setHeaderText("You have lost the game!");
-                alert.showAndWait();
+                Platform.runLater(()->{
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("GameOver");
+                    alert.setHeaderText("You have lost the game!");
+                    alert.showAndWait();
+                });
             }
         });
 

@@ -1,7 +1,6 @@
 package eu.lestard.nonogram.main;
 
 import de.saxsys.mvvmfx.ViewModel;
-import eu.lestard.nonogram.core.GameInstance;
 import eu.lestard.nonogram.core.GameManager;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ReadOnlyIntegerProperty;
@@ -21,9 +20,12 @@ public class MainViewModel implements ViewModel {
 
     private List<Integer> sizeOptions = new ArrayList<>();
 
-    public MainViewModel(GameManager gameManager, GameInstance gameInstance){
-        maxErrors.set(gameInstance.maxErrors().get());
-        currentErrors.bind(gameInstance.errors());
+    public MainViewModel(GameManager gameManager){
+        gameManager.gameInstanceProperty().addListener((obs, oldValue, newValue)->{
+            maxErrors.set(newValue.maxErrors().getValue());
+            currentErrors.unbind();
+            currentErrors.bind(newValue.errors());
+        });
 
         sizeOptions.add(10);
         size.set(10);

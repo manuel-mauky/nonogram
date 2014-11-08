@@ -46,7 +46,8 @@ public class PuzzleViewModel implements ViewModel {
         leftNumberGridModel = new GridModel<>();
         leftNumberGridModel.setDefaultState(0);
 
-        this.gameInstance = gameManager.newGame();
+        gameManager.newGame();
+        this.gameInstance = gameManager.gameInstanceProperty().get();
         this.puzzle = gameInstance.getPuzzle();
         init();
     }

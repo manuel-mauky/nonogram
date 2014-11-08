@@ -59,8 +59,6 @@ public class MainView implements FxmlView<MainViewModel> {
                 center.setContent((Region) view);
             }
         });
-
-
     }
 
     private void updateErrorsBox(){

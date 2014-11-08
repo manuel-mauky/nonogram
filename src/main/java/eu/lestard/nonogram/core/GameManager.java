@@ -1,5 +1,8 @@
 package eu.lestard.nonogram.core;
 
+import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+
 import javax.inject.Singleton;
 import java.util.Random;
 
@@ -8,19 +11,22 @@ public class GameManager {
 
     private int size = 10;
 
-    public GameInstance newGame(){
+    private ReadOnlyObjectWrapper<GameInstance> gameInstance = new ReadOnlyObjectWrapper<>();
+
+    public void newGame(){
         Puzzle puzzle = new Puzzle();
         puzzle.setSize(size);
 
         initRandomPuzzle(puzzle);
 
-        GameInstance gameInstance = new GameInstance(puzzle);
+        gameInstance.setValue(new GameInstance(puzzle));
+    }
 
-        return gameInstance;
+    public ReadOnlyObjectProperty<GameInstance> gameInstanceProperty(){
+        return gameInstance.getReadOnlyProperty();
     }
 
     public void setSize(int size){
-        System.out.println("setSize(" + size + ")");
         this.size = size;
     }
 
