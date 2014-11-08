@@ -5,7 +5,6 @@ import de.saxsys.mvvmfx.InjectViewModel;
 import eu.lestard.grid.Cell;
 import eu.lestard.grid.GridView;
 import eu.lestard.nonogram.core.State;
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.value.ObservableDoubleValue;
@@ -14,11 +13,11 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import org.controlsfx.dialog.Dialogs;
 
 import java.util.List;
 import java.util.function.Function;
@@ -57,19 +56,20 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
 
         viewModel.gameFinishedProperty().addListener((obs, oldV, newV) -> {
             if (newV) {
-                Platform.runLater(() -> Dialogs.create()
-                    .title("Win")
-                    .message("You have successfully finished the game!")
-                    .showInformation());
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Win");
+                alert.setHeaderText("You have successfully finished the game!");
+                alert.setContentText(null);
+                alert.showAndWait();
             }
         });
 
         viewModel.gameOverProperty().addListener((obs, oldV, newV) -> {
             if (newV) {
-                Platform.runLater(() -> Dialogs.create()
-                    .title("GameOver")
-                    .message("You have lost the game!")
-                    .showInformation());
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("GameOver");
+                alert.setHeaderText("You have lost the game!");
+                alert.showAndWait();
             }
         });
 
