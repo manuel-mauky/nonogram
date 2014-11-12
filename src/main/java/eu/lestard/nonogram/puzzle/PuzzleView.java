@@ -134,6 +134,7 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
             final String labelText = Integer.toString(i);
             gridView.addNodeMapping(i, cell -> {
                 final Label label = new Label(labelText);
+                label.setStyle("-fx-font-size:60%");
                 final DoubleBinding boundSize = Bindings.createDoubleBinding(() -> Math.max(label.getBoundsInLocal().getWidth(), label.getBoundsInLocal().getHeight()), label.boundsInLocalProperty());
 
                 final DoubleBinding scaleFactor = gridView.cellSizeProperty().divide(boundSize).divide(1.2);
