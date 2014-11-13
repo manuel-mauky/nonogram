@@ -3,11 +3,15 @@ package eu.lestard.nonogram.puzzle;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import eu.lestard.grid.Cell;
+import eu.lestard.grid.GridModel;
 import eu.lestard.grid.GridView;
 import eu.lestard.nonogram.core.State;
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.DoubleBinding;
+import javafx.beans.binding.*;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableDoubleValue;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -24,6 +28,8 @@ import java.util.List;
 import java.util.function.Function;
 
 public class PuzzleView implements FxmlView<PuzzleViewModel> {
+
+    private static final String HOVER_STYLE = "-fx-background-color:#eee";
 
     private static final int GUIDELINES = 5;
 
@@ -42,6 +48,10 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
     @FXML
     private AnchorPane rootPane;
 
+    private IntegerProperty hoveredRow = new SimpleIntegerProperty(-1);
+
+
+    private ObjectProperty<Cell<State>> hoveredCell = new SimpleObjectProperty<>();
 
     @InjectViewModel
     private PuzzleViewModel viewModel;
@@ -110,6 +120,8 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
 
         initAnchor(leftNumberGridView);
         initFinishedStyleBinding(viewModel.finishedRows(), leftNumberGridView, viewModel.getLeftNumberGridModel()::getCellsOfRow);
+
+        initHover(viewModel.getLeftNumberGridModel(), leftNumberGridView, Cell::getRow);
     }
 
     private void initTopNumberGrid() {
@@ -124,6 +136,27 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
         initNumberGridMapping(topNumberGridView);
         initAnchor(topNumberGridView);
         initFinishedStyleBinding(viewModel.finishedColumns(), topNumberGridView, viewModel.getTopNumberGridModel()::getCellsOfColumn);
+
+        initHover(viewModel.getTopNumberGridModel(), topNumberGridView, Cell::getColumn);
+    }
+
+    private void initHover(GridModel<Integer> gridModel, GridView<Integer> gridView, Function<Cell<?>, Integer> cellFunction){
+        final IntegerBinding hoveredColumn = Bindings.createIntegerBinding(() -> {
+            final Cell<?> cell = hoveredCell.get();
+            if (cell == null) {
+                return -1;
+            } else {
+                return cellFunction.apply(cell);
+            }
+        }, hoveredCell);
+
+        gridModel.getCells().forEach(cell->{
+            final BooleanBinding hoverActive = hoveredColumn.isEqualTo(cellFunction.apply(cell));
+
+            final StringBinding style = Bindings.when(hoverActive).then(HOVER_STYLE).otherwise("");
+
+            gridView.getCellPane(cell).styleProperty().bind(style);
+        });
     }
 
 
@@ -143,6 +176,7 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
 
                 return label;
             });
+
         }
     }
 
@@ -178,6 +212,17 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
         centerGridView.addNodeMapping(State.ERROR, cell -> new Cross(Color.RED));
 
         centerGridView.addNodeMapping(State.MARKED, cell -> new Cross());
+
+
+        viewModel.getCenterGridModel().getCells().forEach(cell->{
+            centerGridView.getCellPane(cell).hoverProperty().addListener((obs,oldV,newV)->{
+                if(newV){
+                    hoveredCell.setValue(cell);
+                }else{
+                    hoveredCell.setValue(null);
+                }
+            });
+        });
 
         centerPane.getChildren().add(centerGridView);
         initAnchor(centerGridView);
