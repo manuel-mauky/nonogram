@@ -45,7 +45,7 @@ dependencies {
 
     compile 'ch.qos.logback:logback-classic:1.1.2'
 
-    compile 'de.saxsys:mvvmFX:0.4.0'
+    compile 'de.saxsys:mvvmfx:1.0.0'
 
     compile 'eu.lestard:grid:0.2.0-SNAPSHOT'
 
@@ -55,6 +55,6 @@ dependencies {
     testCompile "junit:junit:4.11"
     testCompile "org.assertj:assertj-core:1.6.0"
     testCompile "org.mockito:mockito-all:1.9.5"
-    testCompile "eu.lestard:assertj-javafx:0.1.1"
+    testCompile "eu.lestard:assertj-javafx:0.3.0"
 
 }
