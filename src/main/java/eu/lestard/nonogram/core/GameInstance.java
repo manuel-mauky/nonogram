@@ -117,18 +117,6 @@ public class GameInstance {
      * {@link #revealWithSingleClick(eu.lestard.grid.Cell)} is used.
      */
     public void revealWithMouseOver(Cell<State> cell){
-        if(cell.getState() == State.FILLED){
-            return;
-        }
-
-        if(cell.getState() == State.ERROR){
-            return;
-        }
-
-        if(cell.getState() == State.MARKED){
-            return;
-        }
-
         if(cell.getState() == State.EMPTY){
             if(puzzle.isPoint(cell.getColumn(), cell.getRow())){
                 cell.changeState(State.FILLED);

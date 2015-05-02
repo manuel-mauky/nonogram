@@ -11,12 +11,14 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.binding.NumberBinding;
 import javafx.beans.property.*;
+import javafx.beans.value.ObservableBooleanValue;
 import javafx.beans.value.ObservableNumberValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.input.MouseButton;
 
 import java.util.List;
+import java.util.function.Function;
 
 public class PuzzleViewModel implements ViewModel {
 
@@ -38,6 +40,9 @@ public class PuzzleViewModel implements ViewModel {
 
     private ObservableList<Integer> finishedColumns = FXCollections.observableArrayList();
     private ObservableList<Integer> finishedRows = FXCollections.observableArrayList();
+
+    private ObjectProperty<Cell<State>> hoveredCell = new SimpleObjectProperty<>();
+
 
     public PuzzleViewModel(GameManager gameManager){
         topNumberGridModel = new GridModel<>();
@@ -135,6 +140,18 @@ public class PuzzleViewModel implements ViewModel {
 
         Bindings.bindContent(finishedRows, gameInstance.finishedRowsList());
         Bindings.bindContent(finishedColumns, gameInstance.finishedColumnsList());
+    }
+
+
+
+    public void initHoverCells(Function<Cell<State>, ObservableBooleanValue> function) {
+        gameInstance.getGridModel().getCells().forEach(cell ->
+                function.apply(cell).addListener(((observable, oldValue, newValue) ->
+                        hoveredCell.setValue(newValue ? cell : null))));
+    }
+
+    public ObjectProperty<Cell<State>> hoveredCellProperty() {
+        return hoveredCell;
     }
 
     public GridModel<State> getCenterGridModel(){

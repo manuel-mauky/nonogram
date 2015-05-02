@@ -2,16 +2,13 @@ package eu.lestard.nonogram.puzzle;
 
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
+import eu.lestard.advanced_bindings.api.ObjectBindings;
 import eu.lestard.grid.Cell;
 import eu.lestard.grid.GridModel;
 import eu.lestard.grid.GridView;
 import eu.lestard.nonogram.core.State;
 import javafx.application.Platform;
 import javafx.beans.binding.*;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableDoubleValue;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -26,6 +23,7 @@ import javafx.scene.paint.Color;
 
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.IntStream;
 
 public class PuzzleView implements FxmlView<PuzzleViewModel> {
 
@@ -47,11 +45,6 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
 
     @FXML
     private AnchorPane rootPane;
-
-    private IntegerProperty hoveredRow = new SimpleIntegerProperty(-1);
-
-
-    private ObjectProperty<Cell<State>> hoveredCell = new SimpleObjectProperty<>();
 
     @InjectViewModel
     private PuzzleViewModel viewModel;
@@ -141,17 +134,14 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
     }
 
     private void initHover(GridModel<Integer> gridModel, GridView<Integer> gridView, Function<Cell<?>, Integer> cellFunction){
-        final IntegerBinding hoveredColumn = Bindings.createIntegerBinding(() -> {
-            final Cell<?> cell = hoveredCell.get();
-            if (cell == null) {
-                return -1;
-            } else {
-                return cellFunction.apply(cell);
-            }
-        }, hoveredCell);
+
+        final ObjectBinding<Integer> hoveredColumnOrRow =
+                ObjectBindings.map(viewModel.hoveredCellProperty(), cell ->
+                        cell == null ? -1 : cellFunction.apply(cell));
+
 
         gridModel.getCells().forEach(cell->{
-            final BooleanBinding hoverActive = hoveredColumn.isEqualTo(cellFunction.apply(cell));
+            final BooleanBinding hoverActive = hoveredColumnOrRow.isEqualTo(cellFunction.apply(cell));
 
             final StringBinding style = Bindings.when(hoverActive).then(HOVER_STYLE).otherwise("");
 
@@ -163,35 +153,36 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
     private void initNumberGridMapping(GridView<Integer> gridView) {
         final int size = viewModel.getSize();
 
-        for (int i = 1; i <= size; i++) {
-            final String labelText = Integer.toString(i);
-            gridView.addNodeMapping(i, cell -> {
-                final Label label = new Label(labelText);
-                label.setStyle("-fx-font-size:60%");
-                final DoubleBinding boundSize = Bindings.createDoubleBinding(() -> Math.max(label.getBoundsInLocal().getWidth(), label.getBoundsInLocal().getHeight()), label.boundsInLocalProperty());
+        IntStream.rangeClosed(1, size)
+                .forEach(i -> {
+                    final String labelText = Integer.toString(i);
 
-                final DoubleBinding scaleFactor = gridView.cellSizeProperty().divide(boundSize).divide(1.2);
-                label.scaleXProperty().bind(scaleFactor);
-                label.scaleYProperty().bind(scaleFactor);
+                    gridView.addNodeMapping(i, cell -> {
+                        final Label label = new Label(labelText);
+                        label.setStyle("-fx-font-size:60%");
+                        final DoubleBinding boundSize = Bindings.createDoubleBinding(() ->
+                                Math.max(label.getBoundsInLocal().getWidth(), label.getBoundsInLocal().getHeight()), label.boundsInLocalProperty());
 
-                return label;
-            });
+                        final DoubleBinding scaleFactor = gridView.cellSizeProperty().divide(boundSize).divide(1.2);
+                        label.scaleXProperty().bind(scaleFactor);
+                        label.scaleYProperty().bind(scaleFactor);
 
-        }
+                        return label;
+                    });
+                });
+
     }
 
     private void initFinishedStyleBinding(ObservableList<Integer> finishedBlocks, GridView<Integer> gridView, Function<Integer, List<Cell<Integer>>> func) {
         finishedBlocks.addListener((ListChangeListener<Integer>) c -> {
             c.next();
 
-            c.getAddedSubList().forEach(i -> {
-                func.apply(i).forEach(cell -> {
-                    final Pane cellPane = gridView.getCellPane(cell);
-                    cellPane.getChildren().forEach(child -> {
-                        child.setStyle(child.getStyle() + ";-fx-font-weight:bold");
-                    });
-                });
-            });
+            c.getAddedSubList().forEach(i ->
+                    func.apply(i).forEach(cell -> {
+                        final Pane cellPane = gridView.getCellPane(cell);
+                        cellPane.getChildren().forEach(child ->
+                                child.setStyle(child.getStyle() + ";-fx-font-weight:bold"));
+                    }));
         });
     }
 
@@ -214,15 +205,7 @@ public class PuzzleView implements FxmlView<PuzzleViewModel> {
         centerGridView.addNodeMapping(State.MARKED, cell -> new Cross());
 
 
-        viewModel.getCenterGridModel().getCells().forEach(cell->{
-            centerGridView.getCellPane(cell).hoverProperty().addListener((obs,oldV,newV)->{
-                if(newV){
-                    hoveredCell.setValue(cell);
-                }else{
-                    hoveredCell.setValue(null);
-                }
-            });
-        });
+        viewModel.initHoverCells(cell -> centerGridView.getCellPane(cell).hoverProperty());
 
         centerPane.getChildren().add(centerGridView);
         initAnchor(centerGridView);
